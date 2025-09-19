@@ -14,12 +14,14 @@ class Content extends Model
     protected $fillable = [
         'title',
         'description',
+        'type',
         'reason',
         'file',
-        'supervisor_id',
+        'video',
         'student_id',
-        'status',
+        'supervisor_id',
         'chapter_id',
+        'status'
     ];
 
     public function student()
@@ -45,5 +47,15 @@ class Content extends Model
     public function summary()
     {
         return  $this->hasOne(Summary::class,  'id');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function evaluations()
+    {
+        return $this->hasMany(Evaluation::class);
     }
 }

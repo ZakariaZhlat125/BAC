@@ -14,9 +14,12 @@
                 <img src="{{ asset('assets/img/ic_upgrade.png') }}" class="btn_icon"> طلب ترقية
             </button>
         </div>
+
+        <!-- مكان عرض الحالة إذا كان موجود -->
+        <div id="upgradeStatusContainer" class="mt-3"></div>
     @endrole
-    <!-- مكان عرض الحالة إذا كان موجود -->
-    <div id="upgradeStatusContainer" class="mt-3"></div>
+
+
     <!-- أيقونات التنبيهات -->
     <div class="icons position-relative">
         <img src="{{ asset('assets/img/ic_notifications.png') }}" class="ic_notifications" data-bs-toggle="modal"
@@ -132,25 +135,39 @@
                 const upgradeBtnContainer = document.getElementById('upgradeBtnContainer');
                 const container = document.getElementById('upgradeStatusContainer');
                 console.log('data', data);
+
                 if (data.is_upgraded) {
                     // الطالب مترقّي بالفعل
                     if (upgradeBtnContainer) upgradeBtnContainer.style.display = 'none';
                     container.innerHTML = `
-            <p class="text-success fw-bold">🎉 لقد تمت ترقيتك بنجاح.</p>
+            <div class="alert alert-success d-flex align-items-center shadow-sm rounded-3 p-3">
+                <i class="bi bi-award-fill me-2 fs-4 text-success"></i>
+                <div>
+                    <h6 class="mb-1 fw-bold">🎉 تهانينا!</h6>
+                    <p class="mb-0">لقد تمت ترقيتك بنجاح إلى المستوى الأعلى.</p>
+                </div>
+            </div>
         `;
                 } else if (data.has_request) {
                     // إخفاء زر طلب الترقية
                     if (upgradeBtnContainer) upgradeBtnContainer.style.display = 'none';
 
-                    // عرض حالة الطلب
+                    // تحديد شكل البادج
                     let badgeClass = 'badge bg-warning';
-                    if (data.status === 'approved') badgeClass = 'badge bg-success';
-                    else if (data.status === 'rejected') badgeClass = 'badge bg-danger';
+                    let statusText = 'قيد المراجعة ⏳';
+                    if (data.status === 'approved') {
+                        badgeClass = 'badge bg-success';
+                        statusText = 'تمت الموافقة ✅';
+                    } else if (data.status === 'rejected') {
+                        badgeClass = 'badge bg-danger';
+                        statusText = 'تم الرفض ❌';
+                    }
 
                     container.innerHTML = `
-            <p>لديك طلب ترقية حالي:</p>
-            <span class="${badgeClass} p-2">${data.status.toUpperCase()}</span>
-            <p><strong>السبب:</strong> ${data.reason ?? '-'}</p>
+            <div class="card shadow-sm border-0 rounded-3 p-3">
+                <h6 class="fw-bold text-primary mb-2">📌 حالة طلب الترقية</h6>
+                <span class="${badgeClass} px-3 py-2 fs-6">${statusText}</span>
+            </div>
         `;
                 } else {
                     // لا يوجد طلب ولا ترقية → إبقاء زر الترقية ظاهر
@@ -158,6 +175,7 @@
                     container.innerHTML = '';
                 }
             });
+
 
     });
 </script>

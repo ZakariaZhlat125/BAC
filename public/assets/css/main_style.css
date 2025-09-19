@@ -1,13 +1,13 @@
 :root {
     --kfu-green: #004858;
-    --kfu-light-green: #8DC63F;
-    --kfu-beige: #F2EFE6;
-    --kfu-dark: #09595F;
-    --kuf-gold: #C69A47
+    --kfu-light-green: #8dc63f;
+    --kfu-beige: #f2efe6;
+    --kfu-dark: #09595f;
+    --kuf-gold: #c69a47;
 }
 
 body {
-    font-family: 'Tajawal', sans-serif;
+    font-family: "Tajawal", sans-serif;
     background-color: #f8f9fa;
     color: #333;
 }
@@ -36,7 +36,8 @@ body {
 }
 
 .hero-section {
-    background: linear-gradient(rgba(0, 104, 55, 0.9), rgba(0, 104, 55, 0.8)), url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+    background: linear-gradient(rgba(0, 104, 55, 0.9), rgba(0, 104, 55, 0.8)),
+        url("https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80");
     color: white;
     padding: 4rem 0;
     margin-bottom: 3rem;
@@ -93,11 +94,9 @@ body {
 }
 
 .slider-container {
-
     max-width: 80%;
     margin: 0 auto;
     position: relative;
-
 }
 
 .card-carousel {
@@ -116,29 +115,16 @@ body {
 }
 
 .camp-card {
-    flex: 0 0 auto;
-    /* prevent shrinking */
-    width: 300px;
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 16px;
-    scroll-snap-align: start;
-    /* optional snapping */
-}
-
-.camp-card {
-    max-width: 400px;
-
-    background: linear-gradient(12deg, #ffffff 0%, #f1f8ff 100%);
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    transition: transform 0.3s, box-shadow 0.3s;
-    height: 100%;
-    text-align: center;
-    padding: 30px;
-    border: none;
+    max-width: 400px !important;
+    background: linear-gradient(12deg, #ffffff 0%, #f1f8ff 100%) !important;
+    border-radius: 15px !important;
+    overflow: hidden !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+    transition: transform 0.3s, box-shadow 0.3s !important;
+    height: 100% !important;
+    text-align: center !important;
+    padding: 30px !important;
+    border: none !important;
 }
 
 .camp-card:hover {
@@ -179,7 +165,6 @@ body {
     color: var(--kfu-dark);
     margin-bottom: 5px;
     margin-top: 5px;
-
     font-size: 16px;
 }
 
@@ -193,8 +178,6 @@ body {
     font-weight: 700;
     font-size: 1.4rem;
 }
-
-
 
 .btn-kfu {
     background-color: var(--kfu-green);
@@ -232,7 +215,6 @@ body {
     color: white;
 }
 
-
 .section-sub-title {
     position: relative;
     padding-bottom: 15px;
@@ -256,7 +238,7 @@ body {
 }
 
 .section-title:after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: 0;
     left: 50%;
@@ -297,7 +279,6 @@ footer {
     .display-4 {
         font-size: 2rem;
     }
-
 }
 
 .img-card {
@@ -315,7 +296,6 @@ footer {
 .body {
     background-color: #d8d9d9;
 }
-
 
 .leader-card {
     background: #fff;
@@ -360,7 +340,6 @@ footer {
     margin: 10px auto;
 }
 
-
 .course-path {
     margin-top: 48px;
     font-size: 24px;
@@ -399,8 +378,6 @@ footer {
     /* keep text RTL */
 }
 
-
-
 .text-area {
     border-radius: 10px;
     padding: 10px 15px;
@@ -409,9 +386,7 @@ footer {
     margin: 24px 13%;
     color: var(--kuf-gold);
     font-weight: bold;
-
 }
-
 
 .custom-dot {
     width: 12px;

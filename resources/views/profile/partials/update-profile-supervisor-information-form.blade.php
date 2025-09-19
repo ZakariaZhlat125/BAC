@@ -60,17 +60,6 @@
             @endif
         </div>
 
-        {{-- التخصص --}}
-        {{-- <div class="col-md-6">
-            <label for="major" class="form-label fw-semibold">{{ __('التخصص') }}</label>
-            <input id="major" name="major" type="text"
-                class="form-control @error('major') is-invalid @enderror"
-                value="{{ old('major', $user->major ?? '') }}" maxlength="100">
-            @error('major')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div> --}}
-
         {{-- الجنس --}}
         <div class="col-md-6">
             <label for="gender" class="form-label fw-semibold">{{ __('الجنس') }}</label>

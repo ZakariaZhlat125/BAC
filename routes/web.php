@@ -2,22 +2,35 @@
 
 use App\Http\Controllers\CertificationController;
 use App\Http\Controllers\ChapterController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\ContentReportController;
 use App\Http\Controllers\ContentSummaryController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboradController;
+use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SpecializationController;
 use App\Http\Controllers\UpgradeRequestController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [HomeController::class, 'show'])->name('home');
+    Route::get('/home/cources/{id}', [HomeController::class, 'spechome.specialization.cources.chaptersiCources'])->name('home.specialization.cources');
+    Route::get('/home/cources/chapter/{id}', [HomeController::class, 'showChapter'])->name('home.specialization.cources.chapters');
+    Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::post('/evaluations', [EvaluationController::class, 'store'])->name('evaluations.store');
+    Route::get('/home/videoContent/{id}', [HomeController::class, 'showVideoContent'])->name('home.showVideoContent');
+    Route::get('/home/showSummaryContent/{id}', [HomeController::class, 'showSummaryContent'])->name('home.showSummaryContent');
+    Route::get('/comments', function (Request $request) {
+        return \App\Models\Comment::where('content_id', $request->content_id)->with('user')->get();
+    });
+    Route::get('/evaluations/{contentId}', [EvaluationController::class, 'getEvaluations']);
+
     Route::get('/getMyData', [DashboradController::class, 'getMyData'])->name('getMyData');
     Route::post('/notifications/read', function () {
         auth()->user()->unreadNotifications->markAsRead();
@@ -26,6 +39,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Specialization page
     Route::get('/specialization', [SpecializationController::class, 'getSpecializationPage']);
+
+
 
     Route::prefix('dashborad')->middleware(['auth'])->group(function () {
         Route::get('/', [DashboradController::class, 'show'])->name('dashboard.show');

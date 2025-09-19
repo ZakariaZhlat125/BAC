@@ -52,7 +52,7 @@
                 <option value="">{{ __('اختر التخصص الدقيق') }}</option>
                 @foreach ($specializations as $specialization)
                     <option value="{{ $specialization->id }}"
-                        {{ old('specialization_id', $user->supervisor->specialization_id ?? '') == $specialization->id ? 'selected' : '' }}>
+                        {{ old('specialization_id', $user->student->specializ->id ?? '') == $specialization->id ? 'selected' : '' }}>
                         {{ $specialization->title }}
                     </option>
                 @endforeach
@@ -64,26 +64,17 @@
 
         {{-- 👨‍🎓 حقول خاصة بالطلاب --}}
         @if ($user->hasRole('student'))
-            {{-- <div class="col-md-6">
-                <label for="major" class="form-label fw-semibold">{{ __('التخصص') }}</label>
-                <input id="major" name="major" type="text"
-                    class="form-control @error('major') is-invalid @enderror"
-                    value="{{ old('major', $user->student->major ?? '') }}">
-                @error('major')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div> --}}
 
             <div class="col-md-6">
                 <label for="gender" class="form-label fw-semibold">{{ __('الجنس') }}</label>
                 <select id="gender" name="gender" class="form-select @error('gender') is-invalid @enderror">
                     <option value="">{{ __('اختر الجنس') }}</option>
                     <option value="male"
-                        {{ old('gender', $user->student->gender ?? '') === 'male' ? 'selected' : '' }}>
+                        {{ old('gender', $user->gender ?? '') === 'male' ? 'selected' : '' }}>
                         {{ __('ذكر') }}
                     </option>
                     <option value="female"
-                        {{ old('gender', $user->student->gender ?? '') === 'female' ? 'selected' : '' }}>
+                        {{ old('gender', $user->gender ?? '') === 'female' ? 'selected' : '' }}>
                         {{ __('أنثى') }}
                     </option>
                 </select>
@@ -91,14 +82,13 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
-
             <div class="col-md-6">
                 <label for="year" class="form-label fw-semibold">{{ __('السنة الدراسية') }}</label>
                 <select id="year" name="year" class="form-select @error('year') is-invalid @enderror">
                     <option value="">{{ __('اختر السنة') }}</option>
                     @foreach ($years as $year)
                         <option value="{{ $year->id }}"
-                            {{ old('year', $user->student->year ?? '') == $year->id ? 'selected' : '' }}>
+                            {{ old('year',$user->student->yearRelation->id ?? '') == $year->id ? 'selected' : '' }}>
                             {{ $year->name }}
                         </option>
                     @endforeach
@@ -108,26 +98,6 @@
                 @enderror
             </div>
         @endif
-
-        {{-- 👨‍🏫 حقول خاصة بالمشرفين --}}
-        {{-- @if ($user->hasRole('supervisor'))
-            <div class="col-md-6">
-                <label for="specialization_id" class="form-label fw-semibold">{{ __('التخصص الدقيق') }}</label>
-                <select id="specialization_id" name="specialization_id"
-                    class="form-select @error('specialization_id') is-invalid @enderror">
-                    <option value="">{{ __('اختر التخصص الدقيق') }}</option>
-                    @foreach ($specializations as $specialization)
-                        <option value="{{ $specialization->id }}"
-                            {{ old('specialization_id', $user->supervisor->specialization_id ?? '') == $specialization->id ? 'selected' : '' }}>
-                            {{ $specialization->title }}
-                        </option>
-                    @endforeach
-                </select>
-                @error('specialization_id')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
-        @endif --}}
 
         {{-- نبذة عن المستخدم --}}
         <div class="col-12">

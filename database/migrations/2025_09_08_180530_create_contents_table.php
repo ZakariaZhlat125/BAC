@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('title', 100)->nullable();
             $table->text('description')->nullable();
+            $table->enum('type', ['explain', 'summary']);
             $table->text('reason')->nullable();
-            $table->string('file');
+            $table->string('file')->nullable();
+            $table->string('video')->nullable();
             // Foreign keys
             $table->foreignId('student_id')
                 ->nullable()

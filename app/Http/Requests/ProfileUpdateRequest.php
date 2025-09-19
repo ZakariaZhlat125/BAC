@@ -25,15 +25,13 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique('users', 'email')->ignore($this->user()->id),
             ],
-            'gender'            => 'required|in:male,female',
+            'gender' => 'required|in:male,female',
             'specialization_id' => ['required', 'exists:specializations,id'],
         ];
 
         // إذا طالب
-        if ($this->user()->hasRole('student')) {
+        if ($this->user()->hasRole('student')) {;
             $rules = array_merge($rules, [
-                'major'  => ['nullable', 'string', 'max:255'],
-                'points' => ['nullable', 'integer', 'min:0'],
                 'year'   => ['nullable', 'integer', 'min:1'],
                 'bio'    => ['nullable', 'string', 'max:1000'],
             ]);

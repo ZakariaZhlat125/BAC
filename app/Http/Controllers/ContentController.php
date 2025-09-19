@@ -6,6 +6,7 @@ use App\Models\Content;
 use App\Notifications\NewContentNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ContentController extends Controller
 {
@@ -20,7 +21,7 @@ class ContentController extends Controller
 
     public function index()
     {
-        $content = Content::with('chapter','summary')
+        $content = Content::with('chapter', 'summary')
             ->where('student_id', Auth::user()->student->id)
             ->where('status', 'approved')
             ->get();
@@ -28,37 +29,55 @@ class ContentController extends Controller
         return view('Page.DashBorad.User.Content.index', compact('content'));
     }
 
-    // إضافة محتوى جديد
     public function store(Request $request)
     {
-        $request->validate([
-            'title'       => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'file'        => 'nullable|file|mimes:pdf,docx,pptx,txt|max:2048',
-            'chapter_id'  => 'required|exists:chapters,id',
-        ]);
+        try {
+            $request->validate([
+                'title'       => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'file'        => 'nullable|file|mimes:pdf,docx,pptx,txt|max:20480', // 20MB
+                'video'       => 'nullable|file|mimes:mp4,mov,avi,wmv,mkv|max:51200', // 50MB
+                'chapter_id'  => 'required|exists:chapters,id',
+                'type'        => 'required|in:explain,summary',
+            ]);
 
-        $filePath = null;
-        if ($request->hasFile('file')) {
-            $filePath = $request->file('file')->store('contents', 'public');
+            $content = DB::transaction(function () use ($request) {
+                $filePath = $request->hasFile('file')
+                    ? $request->file('file')->store('contents', 'public')
+                    : null;
+
+                $videoPath = $request->hasFile('video')
+                    ? $request->file('video')->store('videos', 'public')
+                    : null;
+
+                $content = Content::create([
+                    'title'        => $request->title,
+                    'description'  => $request->description,
+                    'file'         => $filePath,
+                    'video'        => $videoPath,
+                    'chapter_id'   => $request->chapter_id,
+                    'student_id'   => Auth::user()->student->id,
+                    'type'         => $request->type,
+                    'status'       => 'pending',
+                ]);
+
+                // إشعار المشرف
+                $supervisor = $content->chapter->course->supervisor->user ?? null;
+                if ($supervisor) {
+                    $supervisor->notify(new NewContentNotification($content));
+                }
+
+                return $content;
+            });
+
+            return back()->with('success', '✅ تمت إضافة المحتوى بنجاح وهو بانتظار موافقة المشرف.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return back()->withErrors($e->validator)->withInput();
         }
-
-        $content = Content::create([
-            'title'        => $request->title,
-            'description'  => $request->description,
-            'file'         => $filePath,
-            'chapter_id'   => $request->chapter_id,
-            'student_id'   => Auth::user()->student->id,
-            'status'       => 'pending',
-        ]);
-        // إرسال إشعار للمشرف
-        $supervisor = $content->chapter->course->supervisor->user ?? null; // تأكد من وجود علاقة course -> supervisor
-        if ($supervisor) {
-            $supervisor->notify(new NewContentNotification($content));
-        }
-
-        return back()->with('success', 'تمت إضافة المحتوى بنجاح وهو بانتظار موافقة المشرف.');
     }
+
+
+
 
     // تحديث محتوى (خاص بالطالب صاحب المحتوى)
     public function update(Request $request, Content $content)

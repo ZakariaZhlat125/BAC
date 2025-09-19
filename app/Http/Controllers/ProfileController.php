@@ -25,7 +25,7 @@ class ProfileController extends Controller
 
         // إذا كان طالب
         if ($user->relationLoaded('student') || $user->student) {
-            $user->load('student');
+            $user->load(['student', 'student.yearRelation', 'student.specializ']);
         }
 
         // إذا كان مشرف
@@ -34,8 +34,7 @@ class ProfileController extends Controller
         }
 
 
-        // return response()->json($specializations);
-
+        // return response()->json($user);
         // لو صفحة بليد
         return view('profile.edit', [
             'user' => $user,

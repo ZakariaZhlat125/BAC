@@ -5,19 +5,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
+    <title>BAC</title>
+    <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/main_style.css') }}" rel="stylesheet">
     <title>{{ config('app.name', 'Laravel') }}</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-    <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -33,9 +30,12 @@
         }
 
         body {
-            font-family: 'Tajawal', sans-serif;
-            background-color: #f8f9fa;
+            font-family: "Cairo", sans-serif;
+            background-color: #DCDED3;
             color: #333;
+            direction: rtl;
+            /* Right-to-left direction */
+            text-align: right;
         }
 
         .navbar {
@@ -266,11 +266,65 @@
         .body {
             background-color: #d8d9d9;
         }
+
+
+        /* Gradient progress bar (سهل -> صعب) */
+        .progress-bar-gradient {
+            background: linear-gradient(to right, #f7c948, #00a3a3, #005f73);
+        }
+
+        /* Course card styles */
+        .course-info-card {
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        /* Custom chapter item */
+        .chapter-item {
+            border-radius: 12px;
+            margin-bottom: 12px;
+            padding: 15px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Download icon */
+        .download-icon {
+            background: #0d6d6d;
+            color: #fff;
+            border-radius: 50%;
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        /* Content request button */
+        .btn-request {
+            background-color: #0d6d6d;
+            color: #fff;
+            border-radius: 20px;
+            padding: 5px 12px;
+            font-size: 13px;
+        }
+
+        .btn-request i {
+            margin-left: 5px;
+            color: #f7c948;
+        }
+
+        /* Section headers */
+        .section-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin: 15px 0;
+        }
+
+        .text-gold {
+            color: #c69d00;
+        }
     </style>
 </head>
 
 <body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-100">
+    <div class="min-h-screen">
         @include('layouts.navBar')
 
         <!-- Page Heading -->
@@ -288,8 +342,7 @@
         </main>
         @include('layouts.Footer')
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
-
-</html>
+< /html>

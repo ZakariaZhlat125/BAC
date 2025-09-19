@@ -17,6 +17,7 @@ class Student extends Model
         'year',
         'bio',
         'is_upgraded',
+        'specialization_id',
     ];
 
     public function user()
@@ -48,7 +49,10 @@ class Student extends Model
     {
         return $this->hasMany(Summary::class, 'student_id', 'id');
     }
-
+    public function  specializ()
+    {
+        return $this->belongsTo(Specialization::class, 'specialization_id', 'id');
+    }
     public function upgradeRequest()
     {
         return $this->hasOne(UpgradeRequest::class, 'student_id', 'id');

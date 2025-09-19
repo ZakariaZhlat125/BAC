@@ -139,41 +139,8 @@
 
         {{-- مودال إنشاء محتوى جديد --}}
         <x-modal id="contentModal" title="إضافة محتوى جديد" maxWidth="lg">
-            <form method="POST" action="{{ route('user.contents.store') }}" class="row g-3"
-                enctype="multipart/form-data">
-                @csrf
-                <input type="hidden" name="chapter_id" value="{{ $chapter->id }}">
+            <x-content.create-content :chapter="$chapter"/>
 
-                <div class="col-md-6">
-                    <label class="form-label">عنوان المحتوى</label>
-                    <input type="text" name="title" class="form-control" value="{{ old('title') }}" required>
-                    @error('title')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
-
-                <div class="col-md-6">
-                    <label class="form-label">ملف (اختياري)</label>
-                    <input type="file" name="file" class="form-control">
-                    @error('file')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
-
-                <div class="col-12">
-                    <label class="form-label">الوصف</label>
-                    <textarea name="description" rows="3" class="form-control">{{ old('description') }}</textarea>
-                    @error('description')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
-
-                <div class="col-12 text-end mt-3">
-                    <button type="submit" class="btn btn-success">
-                        <i class="fa-solid fa-floppy-disk me-1"></i> حفظ
-                    </button>
-                </div>
-            </form>
         </x-modal>
 
 
