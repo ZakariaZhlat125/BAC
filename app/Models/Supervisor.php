@@ -20,7 +20,10 @@ class Supervisor extends Model
     {
         return $this->belongsTo(User::class);
     }
-
+    public function  specializ()
+    {
+        return $this->belongsTo(Specialization::class, 'specialization_id', 'id');
+    }
     public function contents()
     {
         return $this->hasMany(Content::class, 'supervisor_id', 'id');

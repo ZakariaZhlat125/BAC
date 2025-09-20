@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\Admin\SuperVisorController;
 use App\Http\Controllers\CertificationController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\CommentController;
@@ -49,6 +51,15 @@ Route::middleware(['auth'])->group(function () {
         // Profile update & delete
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        // ========================
+        // Dashboard للمشرفين
+        // ========================
+
+        Route::middleware(['role:admin'])->name('admin.')->group(function () {
+            Route::resource('supervisors', SuperVisorController::class)->only(['index', 'destroy']);
+            Route::resource('students', StudentController::class)->only(['index', 'destroy']);
+        });
+
         // ========================
         // Dashboard للمشرفين
         // ========================

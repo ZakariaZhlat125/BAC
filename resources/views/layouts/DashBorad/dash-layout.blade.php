@@ -20,10 +20,14 @@
     <!-- الشريط الجانبي -->
     <div class="sidebar">
         <a href="{{ route('dashboard.show') }}">الرئيسية</a>
-        <a href="{{ route('profile.show') }}">حسابي</a>
         {{-- <a href="{{ route('notification.show') }}">التنبيهات</a> --}}
-
+        @role('admin')
+            {{-- admin.students.index --}}
+            <a href="{{ route('admin.students.index') }}">الطلاب</a>
+            <a href="{{ route('admin.supervisors.index') }}">المشرفون</a>
+        @endrole
         @role('student')
+            <a href="{{ route('profile.show') }}">حسابي</a>
             <a href="{{ route('user.getMyCources') }}">كورساتي</a>
             <a href="{{ route('user.certifications.show') }}">اصدار شهادتي</a>
             <a href="{{ route('user.upgrade-requests.my') }}">طلب الترقية الخاص بي</a>
@@ -31,6 +35,7 @@
         @endrole
 
         @role('supervisor')
+            <a href="{{ route('profile.show') }}">حسابي</a>
             <a href="{{ route('supervisor.content.show') }}">المحتوى</a>
             <a href="{{ route('supervisor.courses.index') }}">مقرراتي</a>
             <a href="{{ route('supervisor.events.index') }}">فعالياتي</a>
