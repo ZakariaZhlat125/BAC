@@ -38,6 +38,13 @@ class DashboradController extends Controller
         }
 
         if ($user->hasRole('supervisor')) {
+            $user->load([
+                'supervisor.specializ',
+                'supervisor.contents',
+                'supervisor.events',
+            ]);
+            // return  response()->json($user);
+
             return view('Page.DashBorad.Supervisor.DashBrad', [
                 'user' => $user
             ]);
