@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Certificate;
 use App\Models\Student;
+use App\Models\Supervisor;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,13 +26,13 @@ class CertificationController extends Controller
     {
         $student = Auth::user()->student;
         $hours = $student->volunteer_hours;
-
+        $supervisor = Supervisor::where('specialization_id', $student->specialization_id)->first();
         if ($hours <= 0) {
             return back()->with('error', 'لا يوجد ساعات تطوع متاحة.');
         }
-
         $certification = Certificate::create([
             'student_id'        => $student->id,
+            'supervisor_id'      => $supervisor->id,
             'hours'             => $hours,
             'certificate_number' => 'CERT-' . strtoupper(Str::random(8)),
         ]);

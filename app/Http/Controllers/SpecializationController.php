@@ -22,9 +22,14 @@ class SpecializationController extends Controller
         $specializationModel = Specialization::where('title', $specialization)
             ->orWhere('id', $specialization)
             ->firstOrFail();
-        $events = Event::with(['courses' => function ($query) use ($specializationModel) {
-            $query->where('specialization_id', $specializationModel->id);
-        }])->get();
+        // $events = Event::with(['courses' => function ($query) use ($specializationModel) {
+        //     $query->where('specialization_id', $specializationModel->id);
+        // }])->get();
+
+        $events = Event::with(['supervisor', 'student'])
+            ->whereDate('event_date', '>=', Carbon::today())
+            ->orderBy('event_date', 'asc')
+            ->get();
         // Load years with courses that belong to this specialization
         $years = Year::with(['courses' => function ($query) use ($specializationModel) {
             $query->where('specialization_id', $specializationModel->id);
