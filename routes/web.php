@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [HomeController::class, 'show'])->name('home');
-    Route::get('/home/cources/{id}', [HomeController::class, 'spechome.specialization.cources.chaptersiCources'])->name('home.specialization.cources');
+    Route::get('/home/cources/{id}', [HomeController::class, 'speciCources'])->name('home.specialization.cources');
     Route::get('/home/cources/chapter/{id}', [HomeController::class, 'showChapter'])->name('home.specialization.cources.chapters');
     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::post('/evaluations', [EvaluationController::class, 'store'])->name('evaluations.store');
