@@ -89,6 +89,12 @@ class UpgradeRequestController extends Controller
 
             return back()->with('success', 'تمت الموافقة على طلب الترقية وحذف الطلب.');
         }
+
+        if ($request->status === 'rejected') {
+            $upgradeRequest->delete();
+
+            return back()->with('success', 'تمت الموافقة على طلب الترقية وحذف الطلب.');
+        }
         return back()->with('success', 'تم تحديث حالة طلب الترقية بنجاح.');
     }
 
