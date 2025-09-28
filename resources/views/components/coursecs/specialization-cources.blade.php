@@ -19,9 +19,10 @@
                         <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
                             <div class="row g-2">
                                 @foreach ($chunk as $course)
-                                    <div class="col-2">
+
+                                    <div class="col-3">
                                         <div class=" h-100 text-center p-2">
-                                            <div class="camp-card">
+                                            <div class="camp-card ">
                                                 <a href="{{ route('home.specialization.cources', $course->id) }}">
                                                     <img src="{{ asset('assets/img/ic_management.png') }}"
                                                         style="display: block; margin: 10px auto; width: 70px; height: auto; border-radius: 16px;">
