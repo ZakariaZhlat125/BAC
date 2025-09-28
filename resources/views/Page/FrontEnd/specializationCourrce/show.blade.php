@@ -1,41 +1,44 @@
 <x-app-layout>
     <div class="container my-4">
 
-        <!-- عنوان الفصل -->
-        <div class="card shadow-md border-0 mb-4">
+        <!-- بطاقة العنوان -->
+        <div class="card border-0 shadow rounded-lg mb-4 bg-gradient-success text-white">
             <div class="card-body text-center">
-                <h4 class="fw-bold text-success">
-                    <p>{{ $chapter->title }}</p>
-                </h4>
+                <h4 class="fw-bold m-0">{{ $chapter->title }}</h4>
             </div>
         </div>
 
-        <div class="chapter-item d-flex justify-content-between align-items-center bg-light">
-            <img src="/assets/img/ic_chapter.png" alt="" style="width: 100px; height: 40px;">
-            <div class="d-flex flex-column p-3 ">
-                <span class="fw-bold text-primary mb-2">{{ $chapter->title }}</span>
-                <span class="text-muted">{{ $chapter->description }}</span>
+        <!-- تفاصيل الفصل -->
+        <div class="card border-0 shadow rounded-lg mb-5 d-flex flex-row align-items-center p-3">
+            <div class="bg-light rounded-circle p-3 me-3 d-flex align-items-center justify-content-center" style="width:60px;height:60px;">
+                <img src="/assets/img/ic_chapter.png" alt="" style="width:40px; height:20px;">
             </div>
-            <div class="d-flex gap-2">
-                <!-- Download -->
-                <a href="{{ asset('storage/' . $chapter->file) }}" download class="text-decoration-none">
-                    <i class="fa-solid fa-download text-primary mx-2"></i>
-                </a>
+            <div class="flex-grow-1">
+                <h5 class="fw-bold text-primary mb-1">{{ $chapter->title }}</h5>
+                <p class="text-muted mb-0">{{ $chapter->description }}</p>
             </div>
+            <a href="{{ asset('storage/' . $chapter->file) }}" download class="btn btn-outline-primary ms-3">
+                <i class="fa-solid fa-download me-2"></i> تحميل
+            </a>
         </div>
+
         <!-- تبويبات -->
         <ul class="nav nav-tabs mb-4">
             <li class="nav-item me-2 mx-2 shadow-md">
-                <button id="video-btn" class="btn btn-warning fw-bold px-4">شرح الشابتر</button>
+                <button id="video-btn" class="btn btn-warning fw-bold px-4 d-flex align-items-center">
+                    <i class="fa-solid fa-play-circle me-2"></i> شرح الشابتر
+                </button>
             </li>
             <li class="nav-item mx-2 shadow-md">
-                <button id="summary-btn" class="btn btn-light fw-bold px-4">ملخصات</button>
+                <button id="summary-btn" class="btn btn-light fw-bold px-4 d-flex align-items-center">
+                    <i class="fa-solid fa-book-open me-2"></i> ملخصات
+                </button>
             </li>
         </ul>
 
-        <!-- Components -->
+        <!-- المكونات -->
         <div id="video-component">
-            <x-video-content :chapterId="$chapter->id"/>
+            <x-video-content :chapterId="$chapter->id" />
         </div>
 
         <div id="summary-component" class="d-none">
@@ -44,12 +47,19 @@
 
     </div>
 
+    <!-- تدرجات لونية مخصصة -->
+    <style>
+        .bg-gradient-success {
+            background: linear-gradient(45deg, #28a745, #43cea2);
+        }
+    </style>
+
     <!-- JavaScript -->
     <script>
-        const videoBtn = document.getElementById('video-btn');
-        const summaryBtn = document.getElementById('summary-btn');
-        const videoComponent = document.getElementById('video-component');
-        const summaryComponent = document.getElementById('summary-component');
+        const videoBtn        = document.getElementById('video-btn');
+        const summaryBtn      = document.getElementById('summary-btn');
+        const videoComponent  = document.getElementById('video-component');
+        const summaryComponent= document.getElementById('summary-component');
 
         videoBtn.addEventListener('click', () => {
             videoComponent.classList.remove('d-none');
