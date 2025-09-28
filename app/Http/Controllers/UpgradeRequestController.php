@@ -15,7 +15,7 @@ class UpgradeRequestController extends Controller
     {
         $validated = $request->validate([
             'reason' => 'nullable|string|max:1000',
-            'attach_file' => 'nullable|file|mimes:jpg,jpeg,png,mp4,pdf|max:10240',
+            'attach_file' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mp3,m4a,pptx,pdf|max:10240',
         ]);
 
         $filePath = null;
