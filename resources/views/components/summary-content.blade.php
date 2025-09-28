@@ -1,16 +1,43 @@
 @props(['chapterId'])
 
-<div class="card border-0 shadow-lg rounded-3 p-3 bg-light">
+<div class="card border-0 shadow-lg rounded-3 p-4 bg-white">
     <div class="card-body">
 
-        <!-- بيانات الطالب -->
-        <p id="studentName" class="fw-bold text-center text-warning">
-            اختر مقطعاً لعرض بيانات الطالب
-        </p>
+        <!-- عنوان الملخص وبيانات الطالب -->
+        <div id="summaryDetails" class="mb-4" style="display:none;">
+            <div class="bg-gradient-primary text-white p-3 rounded mb-3">
+                <h5 id="summaryTitle" class="mb-0 fw-bold"></h5>
+            </div>
+            <p class="mb-2">
+                <i class="fa-solid fa-file-lines me-1 text-primary"></i>
+                <strong>الوصف:</strong>
+                <span id="summaryDescription"></span>
+            </p>
+            <p class="mb-3">
+                <i class="fa-solid fa-file-pdf me-1 text-danger"></i>
+                <a id="summaryFileLink" href="#" target="_blank" class="text-decoration-underline">تحميل الملف</a>
+            </p>
+        </div>
+
+        <div id="studentDetails" class="mb-4" style="display:none;">
+            <div class="bg-gradient-info text-white p-3 rounded mb-3">
+                <h6 class="mb-0 fw-bold">بيانات الطالب</h6>
+            </div>
+            <p class="mb-1"><i class="fa-solid fa-user-graduate me-1 text-info"></i><strong>الاسم:</strong> <span
+                    id="studentName"></span></p>
+            <p class="mb-1"><i class="fa-solid fa-layer-group me-1 text-info"></i><strong>التخصص:</strong> <span
+                    id="studentMajor"></span></p>
+            <p class="mb-1"><i class="fa-solid fa-calendar me-1 text-info"></i><strong>السنة الدراسية:</strong> <span
+                    id="studentYear"></span></p>
+            <p class="mb-1"><i class="fa-solid fa-star me-1 text-warning"></i><strong>النقاط:</strong> <span
+                    id="studentPoints"></span></p>
+            <p class="mb-0"><i class="fa-solid fa-quote-left me-1 text-info"></i><strong>نبذة:</strong> <span
+                    id="studentBio"></span></p>
+        </div>
 
         <!-- اختيار ملخص آخر -->
         <div class="mb-3">
-            <label class="form-label">اختر ملخصاً آخر:</label>
+            <label class="form-label fw-bold">اختر ملخصاً آخر:</label>
             <select id="summarySelector" class="form-select">
                 <option disabled selected>-- اختر الملخص --</option>
             </select>
@@ -23,8 +50,8 @@
 
         <!-- تقييم -->
         <div class="mb-3">
-            <label class="form-label">تقييم الملخص:</label>
-            <div id="ratingStars" class="d-flex gap-1">
+            <label class="form-label fw-bold">تقييم الملخص:</label>
+            <div id="ratingStars" class="d-flex gap-2">
                 @for ($i = 1; $i <= 5; $i++)
                     <i class="fa-regular fa-star fa-2x text-warning star" data-value="{{ $i }}"></i>
                 @endfor
@@ -33,7 +60,7 @@
 
         <!-- التعليقات -->
         <div class="mb-3">
-            <label class="form-label">التعليقات:</label>
+            <label class="form-label fw-bold">التعليقات:</label>
             <textarea id="commentBody" class="form-control" rows="3" placeholder="أضف تعليقك هنا..."></textarea>
             <button id="submitComment" class="btn btn-primary mt-2">إرسال التعليق</button>
         </div>
@@ -43,23 +70,35 @@
 
     </div>
 </div>
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const chapterId = "{{ $chapterId }}";
         const selector = document.getElementById('summarySelector');
+        const summaryTitle = document.getElementById('summaryTitle');
+        const summaryDescription = document.getElementById('summaryDescription');
+        const summaryFileLink = document.getElementById('summaryFileLink');
         const studentName = document.getElementById('studentName');
+        const studentMajor = document.getElementById('studentMajor');
+        const studentYear = document.getElementById('studentYear');
+        const studentPoints = document.getElementById('studentPoints');
+        const studentBio = document.getElementById('studentBio');
+        const summaryDetails = document.getElementById('summaryDetails');
+        const studentDetails = document.getElementById('studentDetails');
         const summaryStats = document.getElementById('summaryStats');
         const averageRating = document.getElementById('averageRating');
         const commentBody = document.getElementById('commentBody');
         const submitComment = document.getElementById('submitComment');
         const commentsList = document.getElementById('commentsList');
         let selectedContentId = null;
+        let summariesData = []; // لتخزين الملخصات
         let rating = 0;
 
         // تحميل الملخصات
-        fetch(`/home/summaryContent/${chapterId}`)
+        fetch(`/home/showSummaryContent/${chapterId}`)
             .then(res => res.json())
             .then(data => {
+                summariesData = data;
                 if (data.length === 0) {
                     selector.innerHTML = '<option disabled selected>لا يوجد ملخصات</option>';
                     return;
@@ -68,22 +107,40 @@
                     const option = document.createElement('option');
                     option.value = content.id;
                     option.textContent = content.title;
-                    option.dataset.student = content.student?.user?.name ?? 'طالب مجهول';
                     selector.appendChild(option);
                 });
+                // اختر أول ملخص تلقائياً
                 selector.selectedIndex = 1;
                 selector.dispatchEvent(new Event('change'));
             });
 
         // تغيير الملخص المحدد
         selector.addEventListener('change', function() {
-            const selected = this.options[this.selectedIndex];
-            if (!selected.value) return;
+            const selectedId = this.value;
+            if (!selectedId) return;
+            selectedContentId = selectedId;
 
-            studentName.textContent = "الطالب: " + selected.dataset.student;
-            selectedContentId = selected.value;
+            // العثور على الملخص الحالي
+            const summary = summariesData.find(item => item.id == selectedId);
+            if (summary) {
+                // عرض تفاصيل الملخص
+                summaryTitle.textContent = summary.title;
+                summaryDescription.textContent = summary.description ?? 'لا يوجد وصف';
+                summaryFileLink.href = `/${summary.file}`;
+                summaryDetails.style.display = 'block';
+
+                // عرض بيانات الطالب
+                const student = summary.student;
+                const user = student?.user;
+                studentName.textContent = user?.name ?? 'طالب مجهول';
+                studentMajor.textContent = student?.major ?? 'غير محدد';
+                studentYear.textContent = student?.year ?? '-';
+                studentPoints.textContent = student?.points ?? '0';
+                studentBio.textContent = student?.bio ?? 'لا توجد نبذة';
+                studentDetails.style.display = 'block';
+            }
+
             summaryStats.style.display = "block";
-
             loadComments(selectedContentId);
             loadEvaluations(selectedContentId);
         });
