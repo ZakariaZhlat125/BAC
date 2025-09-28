@@ -35,15 +35,16 @@
                             <td>{{ $req->reason }}</td>
                             <td>
                                 @if ($req->attach_file)
-                                    <a href="{{ asset('storage/' . $req->attach_file) }}" target="_blank">
-                                        <img src="{{ asset('storage/' . $req->attach_file) }}" alt="المرفق"
-                                            style="width:60px; height:60px; object-fit:cover;">
+                                    <i class="fas fa-file-import    "></i>
+                                    <a href="{{ asset('storage/' . $req->attach_file) }}" target="_blank"
+                                        class="btn btn-sm btn-outline-primary">
+                                        تحميل
                                     </a>
                                 @else
                                     <span class="text-muted">لا يوجد ملف</span>
                                 @endif
                             </td>
-                            <td>{{ $req->student->major ?? '-' }}</td>
+                            <td>{{ $req->student->specializ->title  ?? '-' }}</td>
                             <td>{{ $req->student->points ?? '-' }}</td>
                             <td>{{ $req->student->year ?? '-' }}</td>
                             <td>{{ $req->student->bio ?? '-' }}</td>

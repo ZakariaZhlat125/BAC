@@ -70,6 +70,7 @@ Route::middleware(['auth'])->group(function () {
             Route::put('upgrade-requests/{upgradeRequest}/status', [UpgradeRequestController::class, 'updateStatus'])->name('upgrade-requests.update-status');
             Route::delete('upgrade-requests/{upgradeRequest}', [UpgradeRequestController::class, 'destroy'])->name('upgrade-requests.destroy');
             Route::get('/content', [ContentController::class, 'showPage'])->name('content.show');
+            Route::get('/content/approved', [ContentController::class, 'approvedContent'])->name('content.approvedContent');
             Route::post('/content-reports', [ContentReportController::class, 'storeReport'])->name('content-reports.store');
             Route::post('/content-summaries', [ContentSummaryController::class, 'storeSummary'])->name(' content-summaries.store');
 
@@ -95,6 +96,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('my-chapter/{id}', [ChapterController::class, 'myChapter'])->name('getMyChapter');
             // content
             Route::get('contents', [ContentController::class, 'index'])->name('contents.index');
+            Route::get('contents/approved', [ContentController::class, 'approved'])->name('contents.approved');
             Route::post('contents', [ContentController::class, 'store'])->name('contents.store');
             Route::put('contents/{content}', [ContentController::class, 'update'])->name('contents.update');
             Route::delete('contents/{content}', [ContentController::class, 'destroy'])->name('contents.destroy');

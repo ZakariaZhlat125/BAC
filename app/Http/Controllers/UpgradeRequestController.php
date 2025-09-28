@@ -46,14 +46,14 @@ class UpgradeRequestController extends Controller
 
     public function index()
     {
-        $data = UpgradeRequest::with('student')->get();
-        // return response()->json($requests);
+        $data = UpgradeRequest::with(['student', 'student.specializ'])->get();
+        // return response()->json($data);
         return view('Page.DashBorad.supervisor.upgrade_requests.index', compact('data'));
     }
 
     public function pending()
     {
-        $data = UpgradeRequest::with('student', 'supervisor')
+        $data = UpgradeRequest::with(['student', 'student.specializ', 'supervisor'])
             ->where('status', 'pending')
             ->get();
         return view('Page.DashBorad.supervisor.upgrade_requests.pending', compact('data'));

@@ -78,6 +78,17 @@
                                     <td>{{ $chapter->title }}</td>
                                     <td>{{ Str::limit($chapter->description, 50) }}</td>
                                     <td>
+                                        @if ($chapter->file)
+                                            <i class="fas fa-file-import    "></i>
+                                            <a href="{{ asset('storage/' . $chapter->file) }}" target="_blank"
+                                                class="btn btn-sm btn-outline-primary">
+                                                تحميل
+                                            </a>
+                                        @else
+                                            لا يوجد
+                                        @endif
+                                    </td>
+                                    <td>
                                         {{-- زر التعديل --}}
                                         <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                             data-bs-target="#editChapterModal{{ $chapter->id }}">

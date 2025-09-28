@@ -12,7 +12,6 @@ class DashboradController extends Controller
         $user = Auth::user();
 
         if ($user->hasRole('student')) {
-            // تحميل العلاقات مع العد
             $user->load([
                 'student',
                 'student.contents',
@@ -20,15 +19,10 @@ class DashboradController extends Controller
                 'student.yearRelation',
             ]);
 
-            // نجيب عدد المحتويات من علاقة student
             $contentsCount = $user->student?->contents->count() ?? 0;
-
-            // نفترض عندك عمود volunteer_hours في جدول students
             $points = $user->student->points ?? 0;
-
-            // حساب النقاط = الساعات / 10
             $volunteerHours  = intval($points / 10);
-            // return  response()->json($user);
+
             return view('Page.DashBorad.User.DashBrad', [
                 'user' => $user,
                 'volunteerHours' => $volunteerHours,
@@ -42,16 +36,40 @@ class DashboradController extends Controller
                 'supervisor.specializ',
                 'supervisor.contents',
                 'supervisor.events',
+                'supervisor.upgradeRequests',
             ]);
-            // return  response()->json($user);
+
+            // جلب الطلاب من نفس تخصص المشرف
+            $studentsQuery = \App\Models\Student::where('specialization_id', $user->supervisor->specialization_id);
+
+            // عدد الطلاب
+            $studentsUnderSupervision = $studentsQuery->count();
+
+            // حساب الساعات التطوعية = مجموع النقاط ÷ 10
+            $totalPoints = $studentsQuery->sum('points');
+            $totalVolunteerHours = intval($totalPoints / 10);
+
+            // باقي الإحصائيات
+            $contentsCount   = $user->supervisor->contents->count();
+            $pendingContents = $user->supervisor->contents()->where('status', 'pending')->count();
+            $eventsPending   = $user->supervisor->events()->count();
+            $upgradeRequests = $user->supervisor->upgradeRequests()->where('status', 'pending')->count();
 
             return view('Page.DashBorad.Supervisor.DashBrad', [
-                'user' => $user
+                'user'                => $user,
+                'contentsCount'       => $contentsCount,
+                'pendingContents'     => $pendingContents,
+                'eventsPending'       => $eventsPending,
+                'upgradeRequests'     => $upgradeRequests,
+                'studentsCount'       => $studentsUnderSupervision,
+                'totalVolunteerHours' => $totalVolunteerHours,
             ]);
         }
 
+
         return abort(403, 'Unauthorized action.');
     }
+
 
 
 

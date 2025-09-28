@@ -19,6 +19,7 @@
 
     <!-- الشريط الجانبي -->
     <div class="sidebar">
+        <a href="{{ route('home') }}">العودة إلى الرئيسية</a>
         <a href="{{ route('dashboard.show') }}">الرئيسية</a>
         {{-- <a href="{{ route('notification.show') }}">التنبيهات</a> --}}
         @role('admin')
@@ -32,11 +33,13 @@
             <a href="{{ route('user.certifications.show') }}">اصدار شهادتي</a>
             <a href="{{ route('user.upgrade-requests.my') }}">طلب الترقية الخاص بي</a>
             <a href="{{ route('user.contents.index') }}"> عرض محتوياتي</a>
+            <a href="{{ route('user.contents.approved') }}"> عرض محتوياتي المقبولة</a>
         @endrole
 
         @role('supervisor')
             <a href="{{ route('profile.show') }}">حسابي</a>
             <a href="{{ route('supervisor.content.show') }}">المحتوى</a>
+            <a href="{{ route('supervisor.content.approvedContent') }}"> المحتوى المقبول</a>
             <a href="{{ route('supervisor.courses.index') }}">مقرراتي</a>
             <a href="{{ route('supervisor.events.index') }}">فعالياتي</a>
             <a href="{{ route('supervisor.upgrade-requests.index') }}">جميع طلبات الترقية</a>

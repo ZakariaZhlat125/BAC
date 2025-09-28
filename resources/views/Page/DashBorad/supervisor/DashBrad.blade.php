@@ -1,180 +1,129 @@
 <x-dash-layout>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
-            background-color: #f8f9fa;
+            background: linear-gradient(to right, #f1f4f9, #d8dee8);
             font-family: 'Tajawal', sans-serif;
         }
 
         .stat-card {
-            background: #fff;
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .task-card {
-            background: #fff;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .student-badge {
+            border-radius: 20px;
+            padding: 30px 15px;
+            color: #fff;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+            position: relative;
+            overflow: hidden;
             text-align: center;
         }
 
-        .student-badge img {
-            width: 60px;
-            height: 60px;
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .icon-container {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+        }
+
+        .stat-card h6 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .stat-card p {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        /* تدرجات مختلفة لكل بطاقة */
+        .bg-primary-gradient {
+            background: linear-gradient(45deg, #007bff, #6610f2);
+        }
+
+        .bg-info-gradient {
+            background: linear-gradient(45deg, #00c2ff, #00e5ff);
+        }
+
+        .bg-success-gradient {
+            background: linear-gradient(45deg, #28a745, #43cea2);
+        }
+
+        .bg-warning-gradient {
+            background: linear-gradient(45deg, #ffc107, #ffecb3);
+        }
+
+        .bg-danger-gradient {
+            background: linear-gradient(45deg, #dc3545, #ff416c);
+        }
+
+        .bg-secondary-gradient {
+            background: linear-gradient(45deg, #6c757d, #979797);
         }
     </style>
 
-    <div class="row g-3 mb-4">
-        <div class="col-md-3">
-            <div class="stat-card">
-                <i class="bi bi-people fs-3 text-primary"></i>
-                <h6>الطلاب تحت الإشراف</h6>
-                <p class="fw-bold">5</p>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card">
-                <i class="bi bi-journal fs-3 text-info"></i>
-                <h6>محتويات بانتظار المراجعة</h6>
-                <p class="fw-bold">10</p>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card">
-                <i class="bi bi-geo-alt fs-3 text-success"></i>
-                <h6>الفعاليات التي تحتاج موافقة</h6>
-                <p class="fw-bold">3</p>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card">
-                <i class="bi bi-clock-history fs-3 text-warning"></i>
-                <h6>الساعات التطوعية المعتمدة</h6>
-                <p class="fw-bold">480</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Charts Section -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-4">
-            <div class="stat-card">
-                <h6>تطور مشاركة الطلاب مع مرور الوقت</h6>
-                <canvas id="lineChart"></canvas>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="stat-card">
-                <h6>نسبة قبول مقابل رفض المحتوى</h6>
-                <canvas id="pieChart"></canvas>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="stat-card">
-                <h6>عدد المحتويات المرفوضة يومياً خلال الأسبوع</h6>
-                <canvas id="barChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- Best Students + Tasks -->
-    <div class="row g-3">
-        <!-- Best Students -->
-        <div class="col-md-8">
-            <div class="stat-card">
-                <h6>أفضل ثلاث طلاب مشاركين تحت إشرافك</h6>
-                <div class="d-flex justify-content-around mt-3">
-                    <div class="student-badge">
-                        <img src="https://cdn-icons-png.flaticon.com/512/2583/2583344.png" alt="medal">
-                        <p>عمر أحمد</p>
-                    </div>
-                    <div class="student-badge">
-                        <img src="https://cdn-icons-png.flaticon.com/512/2583/2583341.png" alt="medal">
-                        <p>نورة سعيد</p>
-                    </div>
-                    <div class="student-badge">
-                        <img src="https://cdn-icons-png.flaticon.com/512/2583/2583347.png" alt="medal">
-                        <p>علي ناصر</p>
-                    </div>
+    <!-- Cards Section -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4 my-4">
+            <div class="stat-card bg-primary-gradient">
+                <div class="icon-container">
+                    <i class="bi bi-people fs-3"></i>
                 </div>
+                <h6>الطلاب تحت الإشراف</h6>
+                <p>{{ $studentsCount }}</p>
             </div>
         </div>
-
-        <!-- Task List -->
-        <div class="col-md-4">
-            <div class="task-card">
-                <h6>قائمة المهام</h6>
-                <ul class="list-unstyled mt-3">
-                    <li class="d-flex justify-content-between align-items-center mb-2">
-                        10 طلبات مراجعة المحتوى
-                        <button class="btn btn-outline-secondary btn-sm">معاينة</button>
-                    </li>
-                    <li class="d-flex justify-content-between align-items-center mb-2">
-                        2 طلب ترقية لطالب نشط
-                        <button class="btn btn-outline-secondary btn-sm">معاينة</button>
-                    </li>
-                    <li class="d-flex justify-content-between align-items-center mb-2">
-                        5 طلبات إصدار شهادة
-                        <button class="btn btn-outline-secondary btn-sm">معاينة</button>
-                    </li>
-                </ul>
+        <div class="col-md-4 my-4">
+            <div class="stat-card bg-info-gradient">
+                <div class="icon-container">
+                    <i class="bi bi-journal fs-3"></i>
+                </div>
+                <h6>محتويات بانتظار المراجعة</h6>
+                <p>{{ $pendingContents }}</p>
+            </div>
+        </div>
+        <div class="col-md-4 my-4">
+            <div class="stat-card bg-success-gradient">
+                <div class="icon-container">
+                    <i class="bi bi-geo-alt fs-3"></i>
+                </div>
+                <h6>الفعاليات المعلقة</h6>
+                <p>{{ $eventsPending }}</p>
+            </div>
+        </div>
+        <div class="col-md-4 my-4">
+            <div class="stat-card bg-danger-gradient">
+                <div class="icon-container">
+                    <i class="bi bi-arrow-up-square fs-3"></i>
+                </div>
+                <h6>طلبات الترقية</h6>
+                <p>{{ $upgradeRequests }}</p>
+            </div>
+        </div>
+        <div class="col-md-4 my-4">
+            <div class="stat-card bg-secondary-gradient">
+                <div class="icon-container">
+                    <i class="bi bi-collection fs-3"></i>
+                </div>
+                <h6>إجمالي المحتويات</h6>
+                <p>{{ $contentsCount }}</p>
+            </div>
+        </div>
+        <div class="col-md-4 my-4">
+            <div class="stat-card bg-warning-gradient">
+                <div class="icon-container">
+                    <i class="bi bi-clock-history fs-3"></i>
+                </div>
+                <h6>الساعات التطوعية (من النقاط)</h6>
+                <p>{{ $totalVolunteerHours }}</p>
             </div>
         </div>
     </div>
-
-    <script>
-        // Line Chart
-        new Chart(document.getElementById("lineChart"), {
-            type: 'line',
-            data: {
-                labels: ["يناير", "فبراير", "مارس", "ابريل", "مايو"],
-                datasets: [{
-                        label: "المجموعة 1",
-                        data: [100, 200, 300, 400, 500],
-                        borderColor: "blue",
-                        fill: false
-                    },
-                    {
-                        label: "المجموعة 2",
-                        data: [50, 150, 250, 350, 450],
-                        borderColor: "green",
-                        fill: false
-                    }
-                ]
-            }
-        });
-
-        // Pie Chart
-        new Chart(document.getElementById("pieChart"), {
-            type: 'pie',
-            data: {
-                labels: ["المقبولة", "المرفوضة"],
-                datasets: [{
-                    data: [80, 20],
-                    backgroundColor: ["#4caf50", "#f44336"]
-                }]
-            }
-        });
-
-        // Bar Chart
-        new Chart(document.getElementById("barChart"), {
-            type: 'bar',
-            data: {
-                labels: ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"],
-                datasets: [{
-                    label: "عدد المحتويات",
-                    data: [5, 10, 8, 6, 12, 4, 9],
-                    backgroundColor: "#2196f3"
-                }]
-            }
-        });
-    </script>
-
 </x-dash-layout>

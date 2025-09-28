@@ -18,15 +18,32 @@ class ContentController extends Controller
         return view('Page.DashBorad.supervisor.content.Content', compact('contents'));
     }
 
+  public function approvedContent()
+    {
+        $contents = Content::with('chapter')
+            ->where('status', 'approved')
+            ->get();
+        return view('Page.DashBorad.supervisor.content.Content', compact('contents'));
+    }
 
     public function index()
+    {
+        $content = Content::with('chapter', 'summary')
+            ->where('student_id', Auth::user()->student->id)
+            ->get();
+        // return response()->json($contents);
+        return view('Page.DashBorad.User.Content.index', compact('content'));
+    }
+
+
+    public function approved()
     {
         $content = Content::with('chapter', 'summary')
             ->where('student_id', Auth::user()->student->id)
             ->where('status', 'approved')
             ->get();
         // return response()->json($contents);
-        return view('Page.DashBorad.User.Content.index', compact('content'));
+        return view('Page.DashBorad.User.Content.approved', compact('content'));
     }
 
     public function store(Request $request)
