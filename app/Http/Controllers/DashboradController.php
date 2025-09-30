@@ -65,7 +65,10 @@ class DashboradController extends Controller
                 'totalVolunteerHours' => $totalVolunteerHours,
             ]);
         }
+        if ($user->hasRole('admin')) {
 
+            return view('Page.DashBorad.Admin.DashBorad');
+        }
 
         return abort(403, 'Unauthorized action.');
     }

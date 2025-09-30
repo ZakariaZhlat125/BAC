@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreignId('supervisor_id')
                 ->nullable()
                 ->constrained('supervisors')
-                ->onDelete('cascade');
+                ->onDelete('set null');
 
             $table->timestamps();
         });
