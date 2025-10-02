@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark ">
     <div class="container">
         <!-- الشعار -->
         <a class="navbar-brand fw-bold" href="{{ route('home') }}">
@@ -51,8 +51,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('dashboard.show') }}">
-                        لوحة التحكم
-                    </a>
+                        الملف الشخصي </a>
                 </li>
             </ul>
         </div>

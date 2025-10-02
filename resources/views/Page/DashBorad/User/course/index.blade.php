@@ -1,4 +1,4 @@
-<x-dash-layout>
+    <x-dash-layout>
     @foreach ($courses as $course)
         {{ $course->specialization }}
     @endforeach

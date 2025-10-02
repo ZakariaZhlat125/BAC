@@ -9,7 +9,7 @@
 
             <!-- الفعاليات -->
 
-            <div class="col-6 col-md-3 mb-3 mb-md-0">
+            <div class="col-6 col-md-6 mb-3 mb-md-0">
                 <div class="d-flex align-items-center justify-content-center gap-3">
                     <img src="assets/img/ic_activities_2.png" style="width: 80px; height: 80px;">
                     <div class="text-center">
@@ -21,7 +21,7 @@
                 </div>
             </div>
 
-            <!-- المحتوى التعليمي -->
+            {{-- <!-- المحتوى التعليمي -->
             <div class="col-6 col-md-3 mb-3 mb-md-0">
                 <div class="d-flex align-items-center justify-content-center gap-3">
                     <img src="assets/img/ic_media.png" style="width: 80px; height: 80px;">
@@ -34,10 +34,10 @@
                             style="color: var(--kuf-gold); font-size: 24px;">300</span>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- الطلاب النشطين -->
-            <div class="col-6 col-md-3 mb-3 mb-md-0">
+            <div class="col-6 col-md-6 mb-3 mb-md-0">
                 <div class="d-flex align-items-center justify-content-center gap-3">
                     <img src="assets/img/ic_active_std.png" style="width: 80px; height: 80px;">
                     <div class="text-center">
@@ -53,7 +53,7 @@
 
 
             <!-- الزوار -->
-            <div class="col-6 col-md-3 mb-3 mb-md-0">
+            {{-- <div class="col-6 col-md-3 mb-3 mb-md-0">
                 <div class="d-flex align-items-center justify-content-center gap-3">
                     <img src="assets/img/ic_visitors.png" style="width: 80px; height: 80px;">
                     <div class="text-center">
@@ -66,7 +66,7 @@
                     </div>
                 </div>
 
-            </div>
+            </div> --}}
         </div>
     </div>
 </div>

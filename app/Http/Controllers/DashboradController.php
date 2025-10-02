@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UpgradeRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -38,7 +39,6 @@ class DashboradController extends Controller
                 'supervisor.events',
                 'supervisor.upgradeRequests',
             ]);
-
             // جلب الطلاب من نفس تخصص المشرف
             $studentsQuery = \App\Models\Student::where('specialization_id', $user->supervisor->specialization_id);
 
@@ -53,7 +53,7 @@ class DashboradController extends Controller
             $contentsCount   = $user->supervisor->contents->count();
             $pendingContents = $user->supervisor->contents()->where('status', 'pending')->count();
             $eventsPending   = $user->supervisor->events()->count();
-            $upgradeRequests = $user->supervisor->upgradeRequests()->where('status', 'pending')->count();
+            $upgradeRequests = UpgradeRequest::where('status', 'pending')->count();
 
             return view('Page.DashBorad.Supervisor.DashBrad', [
                 'user'                => $user,

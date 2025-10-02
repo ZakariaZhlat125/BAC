@@ -16,8 +16,13 @@ class CourseController extends Controller
      */
     public function index()
     {
+
+        $supervisor = Auth::user()->supervisor;
         // عرض جميع الكورسات مع العلاقات
-        $courses = Course::with(['year', 'specializ'])->get();
+        $courses = Course::with(['year', 'specializ'])
+            ->where('specialization_id', $supervisor->specialization_id)
+            ->get();
+
         $years = Year::get();
         $specializations = Specialization::get();
         // return response()->json($courses );
@@ -48,15 +53,17 @@ class CourseController extends Controller
             'description' => 'nullable|string',
             'semester' => 'nullable|string|max:50',
             'year_id' => 'nullable|exists:years,id',
-            'specialization_id' => 'nullable|exists:specializations,id',
+            // 'specialization_id' => 'nullable|exists:specializations,id',
             'student_id' => 'nullable|exists:students,id',
         ]);
         // جلب supervisor_id من المستخدم الحالي
         $supervisorId = auth()->user()->supervisor->id ?? null;
+        $specialization_id = Auth::user()->supervisor->specialization_id;
 
         // حفظ البيانات
         Course::create(array_merge($validated, [
             'supervisor_id' => $supervisorId,
+            'specialization_id' => $specialization_id
         ]));
 
         return redirect()->route('supervisor.courses.index')->with('success', 'تم إضافة المقرر بنجاح ✅');
@@ -95,7 +102,7 @@ class CourseController extends Controller
             'description' => 'nullable|string',
             'semester' => 'nullable|string|max:50',
             'year_id' => 'nullable|exists:years,id',
-            'specialization_id' => 'nullable|exists:specializations,id',
+            // 'specialization_id' => 'nullable|exists:specializations,id',
             'student_id' => 'nullable|exists:students,id',
         ]);
 
@@ -125,7 +132,7 @@ class CourseController extends Controller
             return response()->json(['message' => 'الطالب غير موجود'], 404);
         }
         $courses = Course::with(['year', 'specializ'])
-            ->where('year_id', $student->year)
+            // ->where('year_id', $student->year)
             ->where('specialization_id', $student->specialization_id)
             ->get();
 

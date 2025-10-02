@@ -8,7 +8,7 @@
                 $time = $notification->created_at->diffForHumans();
             @endphp
 
-            <img src="{{ asset('assets/img/' . $type . '.png') }}" class="btn_icon me-2">
+            {{-- <img src="{{ asset('assets/img/' . $type . '.png') }}" class="btn_icon me-2"> --}}
             <div class="text text-end">
                 <strong>{{ $title }}</strong> - {{ $body }}
                 <div class="time text-muted">منذ {{ $time }}</div>

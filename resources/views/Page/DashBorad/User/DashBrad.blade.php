@@ -35,7 +35,7 @@
     <div class="card p-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="fw-bold">المعلومات الإضافية</h5>
-            <button class="btn btn-outline-secondary btn-sm">تعديل</button>
+            <a href="{{ route('profile.show') }}" class="btn btn-outline-secondary btn-sm">تعديل</a>
         </div>
 
         <!-- Info Row -->
@@ -75,15 +75,74 @@
                     <p class="fw-bold mb-0">{{ $contentsCount }}</p>
                 </div>
             </div>
+            <style>
+                .progress-circle {
+                    width: 100px;
+                    height: 100px;
+                    border-radius: 50%;
+                    background: conic-gradient(var(--kuf-gold) 0deg, #e9ecef 0deg);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin: 0 auto 10px;
+                    font-weight: bold;
+                    color: var(--kfu-dark);
+                    font-size: 18px;
+                    position: relative;
+                }
+
+                .progress-circle span {
+                    position: absolute;
+                }
+            </style>
 
             <!-- النقاط المكتسبة -->
             <div class="col-md-4">
                 <div class="stat-card">
-                    <div class="progress-circle">{{ $points * 10 }}%</div>
+                    <div class="progress-circle" id="points-circle">
+                        <span id="points-percent">0%</span>
+                    </div>
                     <h6 class="mt-2">عدد النقاط المكتسبة</h6>
-                    <p class="fw-bold mb-0">{{ $points }}</p>
+                    <p class="fw-bold mb-0" id="points-value">0</p>
                 </div>
             </div>
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    let points = {{ $points }}; // القيمة الحقيقية من الـ backend
+                    let maxPoints = 100; // نخلي الدائرة تمثل 100% = 100 نقطة
+                    let duration = 2000; // مدة الأنيميشن بالـ ms
+                    let frameRate = 20; // سرعة التحديث (كل 20ms)
+                    let steps = duration / frameRate;
+
+                    let current = 0;
+                    let stepValue = points / steps;
+
+                    let circle = document.getElementById("points-circle");
+                    let percentText = document.getElementById("points-percent");
+                    let valueText = document.getElementById("points-value");
+
+                    let counter = setInterval(() => {
+                        current += stepValue;
+                        if (current >= points) {
+                            current = points;
+                            clearInterval(counter);
+                        }
+
+                        // النسبة المئوية
+                        let percent = Math.round((current / maxPoints) * 100);
+                        if (percent > 100) percent = 100;
+
+                        // تحديث UI
+                        valueText.innerText = Math.floor(current);
+                        percentText.innerText = percent + "%";
+                        circle.style.background =
+                            `conic-gradient(var(--kuf-gold) ${percent * 3.6}deg, #e9ecef 0deg)`;
+                    }, frameRate);
+                });
+            </script>
+
+
         </div>
     </div>
 

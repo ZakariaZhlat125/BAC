@@ -49,7 +49,7 @@ class EventController extends Controller
             'location'     => 'nullable|string|max:100',
             'attendees'    => 'nullable|string',
             'description'  => 'nullable|string',
-            'attach'       => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048', // 2MB max
+            'attach'       => 'nullable|file|mimes:jpg,jpeg,png|max:2048', // 2MB max
         ]);
         // رفع الملف إن وجد
         if ($request->hasFile('attach')) {

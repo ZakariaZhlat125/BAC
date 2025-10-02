@@ -27,13 +27,13 @@
 </div>
 
 <div class="col-12">
-    <label class="form-label">مرفق</label>
-    <input type="file" name="attach" class="form-control">
+    <label class="form-label">رفع صورة</label>
+    <input type="file" name="attach" class="form-control" accept="image/jpeg,image/jpg,image/png">
 
     @if (!empty($event?->attach))
         <div class="mt-2">
             <a href="{{ asset('storage/' . $event->attach) }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                عرض المرفق الحالي
+                عرض الصورة الحالية
             </a>
         </div>
     @endif

@@ -88,12 +88,12 @@
                     <i class="fa-solid fa-circle-xmark"></i> فصول غير متوفرة
                 </div>
 
-                <div class="chapter-item d-flex justify-content-between align-items-center">
+                {{-- <div class="chapter-item d-flex justify-content-between align-items-center">
                     <span>سيتم إضافة محتوى لاحقاً</span>
                     <button class="btn btn-request btn-sm">
                         <i class="fa-solid fa-plus"></i> طلب محتوى
                     </button>
-                </div>
+                </div> --}}
             </div>
         </div>
 

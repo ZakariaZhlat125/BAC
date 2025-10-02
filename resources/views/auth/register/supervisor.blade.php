@@ -89,18 +89,26 @@
             <!-- المحتوى -->
             <div class="register-body">
                 <form method="POST" action="{{ route('register_supervisor') }}">
-                    @csrf <div class="mb-3 text-end">
-                        <label for="fullname" class="form-label text-white">الاسم كامل</label>
-                        <input type="text" class="form-control" name="name" id="name" required>
+                    @csrf
+                    <div class="mb-3 text-end">
+                        <label for="name" class="form-label text-white">الاسم كامل</label>
+                        <input type="text" class="form-control" name="name" id="name" required
+                            placeholder="مثال: محمد أحمد العتيبي">
+                        <small class="text-warning" dir="rtl">الرجاء إدخال الاسم ثلاثي (الاسم الأول - الأوسط -
+                            الأخير)</small>
                         <x-input-error :messages="$errors->get('name')" class="mt-2" />
-
                     </div>
 
                     <div class="mb-3 text-end">
                         <label for="email" class="form-label text-white">البريد الجامعي</label>
-                        <input type="email" class="form-control" name="email" id="email" required><x-input-error
-                            :messages="$errors->get('email')" class="mt-2" />
+                        <input type="email" class="form-control" name="email" id="email" required
+                            placeholder="123456789@super.kfu.edu.sa">
+                        <small class="text-warning" dir="rtl">
+                            يجب أن ينتهي بـ @super.kfu.edu.sa
+                        </small>
+                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
                     </div>
+
 
                     <div class="mb-3 text-end">
                         <label for="password" class="form-label text-white">كلمة المرور</label>

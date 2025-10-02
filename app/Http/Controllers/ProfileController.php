@@ -21,8 +21,8 @@ class ProfileController extends Controller
     {
         $specializations = Specialization::all();
         $years = Year::all();
-        $user = $request->user();
-
+        $user = Auth::user();
+        // return  response()->json($user );
         // إذا كان طالب
         if ($user->relationLoaded('student') || $user->student) {
             $user->load(['student', 'student.yearRelation', 'student.specializ']);

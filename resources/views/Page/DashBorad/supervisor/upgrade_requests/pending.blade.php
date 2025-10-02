@@ -14,7 +14,7 @@
                             <th>تخصص الطالب</th>
                             <th>النقاط</th>
                             <th>السنة</th>
-                            <th>السيرة الذاتية</th>
+                            <th> أسباب الترقية</th>
                             <th>الإجراءات</th>
                         </tr>
                     </thead>
@@ -44,7 +44,7 @@
                                     <span class="text-muted">لا يوجد ملف</span>
                                 @endif
                             </td>
-                            <td>{{ $req->student->specializ->title  ?? '-' }}</td>
+                            <td>{{ $req->student->specializ->title ?? '-' }}</td>
                             <td>{{ $req->student->points ?? '-' }}</td>
                             <td>{{ $req->student->year ?? '-' }}</td>
                             <td>{{ $req->student->bio ?? '-' }}</td>

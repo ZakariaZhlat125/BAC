@@ -55,8 +55,20 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^\S+\s+\S+\s+\S+$/u'
+            ],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'regex:/^[0-9]{9}@student\.kfu\.edu\.sa$/i',
+                'max:255',
+                'unique:' . User::class
+            ],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'major' => 'nullable|string|max:100',
             'gender' => 'required|in:male,female',
@@ -102,8 +114,21 @@ class RegisteredUserController extends Controller
     {
 
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^\S+\s+\S+\s+\S+$/u',
+
+            ],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                'regex:/^[^@]+@super\.kfu\.edu\.sa$/i',
+                'unique:users,email'
+            ],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'gender' => 'required|in:male,female',
             'specialization_id' => 'nullable|exists:specializations,id',

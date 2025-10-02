@@ -113,7 +113,31 @@ body {
     gap: 20px;
     /* space between cards */
 }
+.card-event {
+    border-radius: 16px;
+    background-color: var(--kfu-beige);
+}
 
+.card-event h5 {
+    color: var(--kuf-gold); /* لون العنوان */
+    font-weight: bold;
+}
+
+.btn-kfu {
+    background-color: var(--kfu-green);
+    color: #fff;
+    border-radius: 8px;
+}
+
+.btn-kfu:hover {
+    background-color: var(--kfu-dark);
+    color: #fff;
+}
+
+.btn-success {
+    background-color: var(--kfu-light-green) !important;
+    border: none;
+}
 .camp-card {
     max-width: 400px !important;
     background: linear-gradient(12deg, #ffffff 0%, #f1f8ff 100%) !important;
