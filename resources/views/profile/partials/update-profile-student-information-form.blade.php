@@ -64,17 +64,14 @@
 
         {{-- 👨‍🎓 حقول خاصة بالطلاب --}}
         @if ($user->hasRole('student'))
-
             <div class="col-md-6">
                 <label for="gender" class="form-label fw-semibold">{{ __('الجنس') }}</label>
                 <select id="gender" name="gender" class="form-select @error('gender') is-invalid @enderror">
                     <option value="">{{ __('اختر الجنس') }}</option>
-                    <option value="male"
-                        {{ old('gender', $user->gender ?? '') === 'male' ? 'selected' : '' }}>
+                    <option value="male" {{ old('gender', $user->gender ?? '') === 'male' ? 'selected' : '' }}>
                         {{ __('ذكر') }}
                     </option>
-                    <option value="female"
-                        {{ old('gender', $user->gender ?? '') === 'female' ? 'selected' : '' }}>
+                    <option value="female" {{ old('gender', $user->gender ?? '') === 'female' ? 'selected' : '' }}>
                         {{ __('أنثى') }}
                     </option>
                 </select>
@@ -82,13 +79,14 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
+
             <div class="col-md-6">
                 <label for="year" class="form-label fw-semibold">{{ __('السنة الدراسية') }}</label>
                 <select id="year" name="year" class="form-select @error('year') is-invalid @enderror">
                     <option value="">{{ __('اختر السنة') }}</option>
                     @foreach ($years as $year)
                         <option value="{{ $year->id }}"
-                            {{ old('year',$user->student->yearRelation->id ?? '') == $year->id ? 'selected' : '' }}>
+                            {{ old('year', $user->student->yearRelation->id ?? '') == $year->id ? 'selected' : '' }}>
                             {{ $year->name }}
                         </option>
                     @endforeach
@@ -97,7 +95,26 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
+
+            {{-- 🧑‍🏫 اختيار المشرف الأكاديمي --}}
+            <div class="col-md-6">
+                <label for="supervisor_id" class="form-label fw-semibold">{{ __('المشرف الأكاديمي') }}</label>
+                <select id="supervisor_id" name="supervisor_id"
+                    class="form-select @error('supervisor_id') is-invalid @enderror">
+                    <option value="">{{ __('اختر المشرف') }}</option>
+                    @foreach ($supervisors as $supervisor)
+                        <option value="{{ $supervisor->id }}"
+                            {{ old('supervisor_id', optional($user->student->supervisor->first())->id ?? '') == $supervisor->id ? 'selected' : '' }}>
+                            {{ $supervisor->user->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('supervisor_id')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
         @endif
+
 
         {{-- نبذة عن المستخدم --}}
         <div class="col-12">

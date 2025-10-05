@@ -39,21 +39,23 @@ class DashboradController extends Controller
                 'supervisor.events',
                 'supervisor.upgradeRequests',
             ]);
-            // جلب الطلاب من نفس تخصص المشرف
-            $studentsQuery = \App\Models\Student::where('specialization_id', $user->supervisor->specialization_id);
+            $supervisor = $user->supervisor;
 
-            // عدد الطلاب
-            $studentsUnderSupervision = $studentsQuery->count();
+            // // جلب الطلاب من نفس تخصص المشرف
+            // $studentsQuery = \App\Models\Student::where('specialization_id', $user->supervisor->specialization_id);
+            $studentsUnderSupervision = $supervisor->students()->count();
+            // // عدد الطلاب
+            // $studentsUnderSupervision = $studentsQuery->count();
 
             // حساب الساعات التطوعية = مجموع النقاط ÷ 10
-            $totalPoints = $studentsQuery->sum('points');
+            $totalPoints = $supervisor->students()->sum('points');
             $totalVolunteerHours = intval($totalPoints / 10);
 
             // باقي الإحصائيات
             $contentsCount   = $user->supervisor->contents->count();
             $pendingContents = $user->supervisor->contents()->where('status', 'pending')->count();
             $eventsPending   = $user->supervisor->events()->count();
-            $upgradeRequests = UpgradeRequest::where('status', 'pending')->count();
+            $upgradeRequests = UpgradeRequest::where('status', 'pending')->where('supervisor_id', $supervisor->id)->count();
 
             return view('Page.DashBorad.Supervisor.DashBrad', [
                 'user'                => $user,

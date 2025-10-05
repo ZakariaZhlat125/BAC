@@ -25,6 +25,8 @@ class UpgradeRequestController extends Controller
 
         // الحصول على الطالب الحالي
         $student = Auth::user()->student;
+        $supervisor = $student->supervisor()->first();
+
 
         // تحديث أو إنشاء upgrade request لهذا الطالب
         $upgradeRequest = $student->upgradeRequest()->updateOrCreate(
@@ -33,12 +35,11 @@ class UpgradeRequestController extends Controller
                 'status' => 'pending',
                 'reason' => $validated['reason'] ?? null,
                 'attach_file' => $filePath,
-                'supervisor_id' => null,
+                'supervisor_id' => $supervisor->id,
             ]
         );
-        // 🔔 إرسال إشعار لكل المشرفين
-        $supervisors = \App\Models\User::role('supervisor')->get(); // باستخدام spatie/laravel-permission
-        Notification::send($supervisors, new NewUpgradeRequestNotification($student));
+        $supervisorUser = $supervisor->user;
+        Notification::send($supervisorUser, new NewUpgradeRequestNotification($student));
 
         return back()->with('success', 'تم إرسال طلب الترقية بنجاح، وسيتم مراجعته قريباً.');
     }
@@ -46,15 +47,25 @@ class UpgradeRequestController extends Controller
 
     public function index()
     {
-        $data = UpgradeRequest::with(['student', 'student.specializ'])->get();
+        $user = Auth::user();
+        $supervisorId = $user->supervisor->id;
+
+        $data = UpgradeRequest::with(['student', 'student.specializ', 'student.user'])->where('supervisor_id', $supervisorId)
+            ->latest()
+            ->get();
         // return response()->json($data);
         return view('Page.DashBorad.supervisor.upgrade_requests.index', compact('data'));
     }
 
     public function pending()
     {
+        $user = Auth::user();
+        $supervisorId = $user->supervisor->id;
+
         $data = UpgradeRequest::with(['student', 'student.specializ', 'supervisor'])
             ->where('status', 'pending')
+            ->where('supervisor_id', $supervisorId)
+            ->latest()
             ->get();
         return view('Page.DashBorad.supervisor.upgrade_requests.pending', compact('data'));
     }

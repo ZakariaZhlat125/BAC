@@ -2,17 +2,11 @@
 
 namespace App\Http\Requests;
 
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class ProfileUpdateRequest extends FormRequest
 {
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         $rules = [
@@ -25,22 +19,23 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique('users', 'email')->ignore($this->user()->id),
             ],
-            'gender' => 'required|in:male,female',
+            'gender'            => ['required', 'in:male,female'],
             'specialization_id' => ['required', 'exists:specializations,id'],
         ];
 
         // إذا طالب
-        if ($this->user()->hasRole('student')) {;
+        if ($this->user()->hasRole('student')) {
             $rules = array_merge($rules, [
-                'year'   => ['nullable', 'integer', 'min:1'],
-                'bio'    => ['nullable', 'string', 'max:1000'],
+                'year'          => ['nullable', 'integer', 'min:1'],
+                'bio'           => ['nullable', 'string', 'max:1000'],
+                'supervisor_id' => ['nullable', 'exists:supervisors,id'], // ✅ أضف هذا
             ]);
         }
 
         // إذا مشرف
         if ($this->user()->hasRole('supervisor')) {
             $rules = array_merge($rules, [
-                'department_id' => ['required', 'exists:departments,id'],
+                // 'department_id' => ['required', 'exists:departments,id'],
             ]);
         }
 

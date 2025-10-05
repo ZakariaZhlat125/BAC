@@ -39,6 +39,13 @@ class Supervisor extends Model
         return $this->hasMany(Event::class, 'supervisor_id', 'id');
     }
 
+    public function students()
+    {
+        return $this->belongsToMany(Student::class, 'student_supervisors')
+            ->withTimestamps();
+    }
+
+
     public function upgradeRequests()
     {
         return $this->hasMany(UpgradeRequest::class, 'supervisor_id', 'id');

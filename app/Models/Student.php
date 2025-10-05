@@ -57,6 +57,12 @@ class Student extends Model
     {
         return $this->hasOne(UpgradeRequest::class, 'student_id', 'id');
     }
+    public function supervisor()
+    {
+        return $this->belongsToMany(Supervisor::class, 'student_supervisors')
+            ->withTimestamps()
+            ->latest(); // optional: always get the latest supervisor
+    }
 
 
     public function getVolunteerHoursAttribute()
