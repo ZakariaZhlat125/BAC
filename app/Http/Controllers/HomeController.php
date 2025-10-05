@@ -26,11 +26,28 @@ class HomeController extends Controller
 
     public function speciCources($id)
     {
-        $course = Course::with(['year', 'specializ', 'chapters'])->findOrFail($id);
+        $course = Course::with([
+            'year',
+            'specializ',
+            'chapters.contents', // load contents for each chapter
+        ])->findOrFail($id);
 
-        // return response()->json($course);
-        return  view('Page.FrontEnd.specializationCourrce.index', compact('course'));
+        // فصل الفصول بناءً على وجود محتوى أو لا
+        $chaptersWithContent = $course->chapters->filter(function ($chapter) {
+            return $chapter->contents && $chapter->contents->isNotEmpty();
+        });
+
+        $chaptersWithoutContent = $course->chapters->filter(function ($chapter) {
+            return !$chapter->contents || $chapter->contents->isEmpty();
+        });
+
+        return view('Page.FrontEnd.specializationCourrce.index', compact(
+            'course',
+            'chaptersWithContent',
+            'chaptersWithoutContent'
+        ));
     }
+
     public function showChapter($id)
     {
         $chapter = Chapter::findOrFail($id);
