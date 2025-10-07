@@ -53,6 +53,7 @@ class CourseController extends Controller
             'description' => 'nullable|string',
             'semester' => 'nullable|string|max:50',
             'year_id' => 'nullable|exists:years,id',
+            'difficulty' => 'nullable|integer|min:1|max:10',
             // 'specialization_id' => 'nullable|exists:specializations,id',
             'student_id' => 'nullable|exists:students,id',
         ]);
@@ -102,6 +103,7 @@ class CourseController extends Controller
             'description' => 'nullable|string',
             'semester' => 'nullable|string|max:50',
             'year_id' => 'nullable|exists:years,id',
+            'difficulty' => 'nullable|integer|min:1|max:10',
             // 'specialization_id' => 'nullable|exists:specializations,id',
             'student_id' => 'nullable|exists:students,id',
         ]);

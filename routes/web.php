@@ -72,7 +72,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/content', [ContentController::class, 'showPage'])->name('content.show');
             Route::get('/content/approved', [ContentController::class, 'approvedContent'])->name('content.approvedContent');
             Route::post('/content-reports', [ContentReportController::class, 'storeReport'])->name('content-reports.store');
-            Route::post('/content-summaries', [ContentSummaryController::class, 'storeSummary'])->name(' content-summaries.store');
+            Route::post('/content-summaries', [ContentSummaryController::class, 'storeSummary'])->name('content-summaries.store');
 
             // الفعاليات
             Route::resource('events', EventController::class);

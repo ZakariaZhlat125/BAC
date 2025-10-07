@@ -14,11 +14,12 @@ class ContentController extends Controller
     {
         $contents = Content::with('chapter')
             ->where('status', 'pending')
+            ->orWhere('status', 'rejected')
             ->get();
         return view('Page.DashBorad.supervisor.content.Content', compact('contents'));
     }
 
-  public function approvedContent()
+    public function approvedContent()
     {
         $contents = Content::with('chapter')
             ->where('status', 'approved')
@@ -136,14 +137,18 @@ class ContentController extends Controller
     {
         $request->validate([
             'status' => 'required|in:pending,approved,rejected',
+            'points' => 'nullable|integer|min:1|max:100',
         ]);
 
         $content = Content::findOrFail($id);
         $content->status = $request->status;
-        $content->supervisor_id = auth()->user()->supervisor->id ?? null; // تسجيل المشرف
+        $content->supervisor_id = auth()->user()->supervisor->id ?? null;
         $content->save();
+
+        // ✅ في حال اعتماد المحتوى
         if ($request->status === 'approved' && $content->student) {
-            $content->student->increment('points', 5);
+            $points = $request->input('points', 5); // إذا لم يدخل المستخدم رقم، القيمة الافتراضية 5
+            $content->student->increment('points', $points);
         }
 
         return redirect()->back()->with('success', 'تم تحديث حالة المحتوى بنجاح.');

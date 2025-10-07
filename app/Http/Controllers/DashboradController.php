@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Content;
+use App\Models\Event;
 use App\Models\UpgradeRequest;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -39,42 +42,71 @@ class DashboradController extends Controller
                 'supervisor.events',
                 'supervisor.upgradeRequests',
             ]);
+
             $supervisor = $user->supervisor;
 
-            // // جلب الطلاب من نفس تخصص المشرف
-            // $studentsQuery = \App\Models\Student::where('specialization_id', $user->supervisor->specialization_id);
+            // 🔹 عدد الطلاب تحت الإشراف
             $studentsUnderSupervision = $supervisor->students()->count();
-            // // عدد الطلاب
-            // $studentsUnderSupervision = $studentsQuery->count();
 
-            // حساب الساعات التطوعية = مجموع النقاط ÷ 10
+            // 🔹 النقاط والساعات التطوعية
             $totalPoints = $supervisor->students()->sum('points');
             $totalVolunteerHours = intval($totalPoints / 10);
 
-            // باقي الإحصائيات
-            $contentsCount   = $user->supervisor->contents->count();
-            $pendingContents = $user->supervisor->contents()->where('status', 'pending')->count();
-            $eventsPending   = $user->supervisor->events()->count();
-            $upgradeRequests = UpgradeRequest::where('status', 'pending')->where('supervisor_id', $supervisor->id)->count();
+            // 🔹 المحتويات
+            $contentsCount   = $supervisor->contents->count();
+            $pendingContents = $supervisor->contents()->where('status', 'pending')->count();
+
+            // 🔹 طلبات الترقية
+            $upgradeRequests = UpgradeRequest::where('status', 'pending')
+                ->where('supervisor_id', $supervisor->id)
+                ->count();
+
+            // 🔹 الفعاليات خلال الأسبوع الحالي (لكل يوم)
+            $startOfWeek = Carbon::now()->startOfWeek();
+            $endOfWeek   = Carbon::now()->endOfWeek();
+
+            $weeklyEvents = Event::selectRaw('DAYNAME(event_date) as day, COUNT(*) as count')
+                ->where('supervisor_id', $supervisor->id)
+                ->whereBetween('event_date', [$startOfWeek, $endOfWeek])
+                ->groupBy('day')
+                ->pluck('count', 'day')
+                ->toArray();
+
+            // تجهيز البيانات للأيام بالترتيب
+            $days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            $eventsPerDay = [];
+            foreach ($days as $day) {
+                $eventsPerDay[] = $weeklyEvents[$day] ?? 0;
+            }
+
+            // 🔹 عدد المحتويات في كل تخصص (عن طريق course)
+            $specializationStats = Content::join('chapters', 'contents.chapter_id', '=', 'chapters.id')
+                ->join('courses', 'chapters.course_id', '=', 'courses.id')
+                ->join('specializations', 'courses.specialization_id', '=', 'specializations.id')
+                ->where('contents.supervisor_id', $supervisor->id)
+                ->selectRaw('specializations.title as specialization_name, COUNT(contents.id) as total')
+                ->groupBy('specializations.title')
+                ->get();
 
             return view('Page.DashBorad.Supervisor.DashBrad', [
                 'user'                => $user,
                 'contentsCount'       => $contentsCount,
                 'pendingContents'     => $pendingContents,
-                'eventsPending'       => $eventsPending,
                 'upgradeRequests'     => $upgradeRequests,
                 'studentsCount'       => $studentsUnderSupervision,
                 'totalVolunteerHours' => $totalVolunteerHours,
+                'specializationStats' => $specializationStats,
+                'days'                => json_encode(['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت']),
+                'eventsPerDay'        => json_encode($eventsPerDay),
             ]);
         }
-        if ($user->hasRole('admin')) {
 
+        if ($user->hasRole('admin')) {
             return view('Page.DashBorad.Admin.DashBorad');
         }
 
         return abort(403, 'Unauthorized action.');
     }
-
 
 
 

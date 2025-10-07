@@ -23,7 +23,6 @@ class ProfileController extends Controller
         $specializations = Specialization::all();
         $years = Year::all();
         $user = Auth::user();
-
         // تحميل جميع المشرفين المتاحين لاختيارهم
         $supervisors = Supervisor::with('user')->get();
 
@@ -48,25 +47,26 @@ class ProfileController extends Controller
     }
 
 
-    /**
-     * Update the user's profile information.
-     */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $user = $request->user();
+        // الحصول على المستخدم الحالي
+        $user = Auth::user();
 
-        // 1. تحديث بيانات المستخدم الأساسية
+        // تعبئة الحقول المسموح بها من request
         $user->fill($request->validated());
 
+        // إعادة تعيين حالة التحقق من البريد إذا تم تغييره
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
 
+        // حفظ التغييرات في جدول users
         $user->save();
 
-        // 2. إذا كان المستخدم طالب
-        if ($user->hasRole('student')) {
-            // تحديث بيانات الطالب الأساسية
+        // ================================
+        // 🔹 تحديث بيانات الطالب (إن وجد)
+        // ================================
+        if ($user->hasRole('student') && $user->student) {
             $user->student()->update([
                 'major'             => $request->input('major'),
                 'year'              => $request->input('year'),
@@ -74,26 +74,31 @@ class ProfileController extends Controller
                 'specialization_id' => $request->input('specialization_id'),
             ]);
 
-            // ✅ ربط الطالب بالمشرف (إن وجد)
+            // 🔹 تحديث أو ربط المشرف الأكاديمي
             if ($request->filled('supervisor_id')) {
                 $student = $user->student;
                 $supervisorId = $request->input('supervisor_id');
-
-                // إذا كان الطالب لديه مشرف مسبقًا — نحدث العلاقة
                 $student->supervisor()->sync([$supervisorId]);
             }
         }
 
-        // 3. إذا كان المستخدم مشرف
-        if ($user->hasRole('supervisor')) {
+        // ================================
+        // 🔹 تحديث بيانات المشرف (إن وجد)
+        // ================================
+        if ($user->hasRole('supervisor') && $user->supervisor) {
             $user->supervisor()->update([
                 'specialization_id' => $request->input('specialization_id'),
-                // 'department_id' => $request->input('department_id'),
             ]);
         }
 
-        return Redirect::route('profile.show')->with('status', 'profile-updated');
+        // ================================
+        // ✅ إعادة التوجيه بنفس الصفحة
+        // ================================
+        return redirect()
+            ->back()
+            ->with('status', 'تم تحديث الملف الشخصي بنجاح ✅');
     }
+
 
 
 

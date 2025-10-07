@@ -1,6 +1,10 @@
 <x-app-layout>
     <div class="container my-4">
-
+        <style>
+            .progress-bar-gradient {
+                background: linear-gradient(to right, #4caf50, #ffc107, #f44336);
+            }
+        </style>
         <!-- 🧾 Course Info -->
         <div class="card shadow-sm border-0 mb-4 course-info-card">
             <div class="card-body">
@@ -13,15 +17,27 @@
                 </div>
 
                 <div class="my-3">
-                    <label class="fw-bold">صعوبة المقرر:</label>
+                    <label class="fw-bold">صعوبة المقرر: {{ $course->difficulty }}</label>
+
+                    @php
+                        // تحويل مدى الصعوبة (1-10) إلى نسبة مئوية (0-100%)
+                        $difficulty = $course->difficulty ?? 1;
+                        $difficultyPercent = ($difficulty / 10) * 100;
+                    @endphp
+
                     <div class="progress" style="height: 8px;">
-                        <div class="progress-bar progress-bar-gradient" role="progressbar" style="width: 50%"></div>
+                        <div class="progress-bar progress-bar-gradient" role="progressbar"
+                            style="width: {{ $difficultyPercent }}%;" aria-valuenow="{{ $difficulty }}"
+                            aria-valuemin="1" aria-valuemax="10">
+                        </div>
                     </div>
+
                     <div class="d-flex justify-content-between text-muted small mt-1">
                         <span>سهل</span>
                         <span>صعب</span>
                     </div>
                 </div>
+
 
                 <p><strong>التخصص:</strong> <span class="text-success">{{ $course->specializ->title ?? '-' }}</span></p>
                 <p><strong>الفصل:</strong> <span class="text-success">{{ $course->semester ?? '-' }}</span></p>

@@ -44,15 +44,16 @@
                 @enderror
             </div>
         </div>
+
+        {{-- التخصص --}}
         <div class="col-md-6">
             <label for="specialization_id" class="form-label fw-semibold">{{ __('التخصص الدقيق') }}</label>
-
             <select id="specialization_id" name="specialization_id"
-                class="form-select @error('specialization_id') is-invalid @enderror">
+                class="form-select @error('specialization_id') is-invalid @enderror" required>
                 <option value="">{{ __('اختر التخصص الدقيق') }}</option>
                 @foreach ($specializations as $specialization)
                     <option value="{{ $specialization->id }}"
-                        {{ old('specialization_id', $user->student->specializ->id ?? '') == $specialization->id ? 'selected' : '' }}>
+                        {{ old('specialization_id', optional($user->student->specializ)->id ?? optional($user->supervisor)->specialization_id) == $specialization->id ? 'selected' : '' }}>
                         {{ $specialization->title }}
                     </option>
                 @endforeach
@@ -64,9 +65,11 @@
 
         {{-- 👨‍🎓 حقول خاصة بالطلاب --}}
         @if ($user->hasRole('student'))
+            {{-- الجنس --}}
             <div class="col-md-6">
                 <label for="gender" class="form-label fw-semibold">{{ __('الجنس') }}</label>
-                <select id="gender" name="gender" class="form-select @error('gender') is-invalid @enderror">
+                <select id="gender" name="gender" class="form-select @error('gender') is-invalid @enderror"
+                    required>
                     <option value="">{{ __('اختر الجنس') }}</option>
                     <option value="male" {{ old('gender', $user->gender ?? '') === 'male' ? 'selected' : '' }}>
                         {{ __('ذكر') }}
@@ -80,13 +83,14 @@
                 @enderror
             </div>
 
+            {{-- السنة الدراسية --}}
             <div class="col-md-6">
                 <label for="year" class="form-label fw-semibold">{{ __('السنة الدراسية') }}</label>
-                <select id="year" name="year" class="form-select @error('year') is-invalid @enderror">
+                <select id="year" name="year" class="form-select @error('year') is-invalid @enderror" required>
                     <option value="">{{ __('اختر السنة') }}</option>
                     @foreach ($years as $year)
                         <option value="{{ $year->id }}"
-                            {{ old('year', $user->student->yearRelation->id ?? '') == $year->id ? 'selected' : '' }}>
+                            {{ old('year', optional($user->student->yearRelation)->id ?? '') == $year->id ? 'selected' : '' }}>
                             {{ $year->name }}
                         </option>
                     @endforeach
@@ -96,11 +100,11 @@
                 @enderror
             </div>
 
-            {{-- 🧑‍🏫 اختيار المشرف الأكاديمي --}}
+            {{-- المشرف الأكاديمي --}}
             <div class="col-md-6">
                 <label for="supervisor_id" class="form-label fw-semibold">{{ __('المشرف الأكاديمي') }}</label>
                 <select id="supervisor_id" name="supervisor_id"
-                    class="form-select @error('supervisor_id') is-invalid @enderror">
+                    class="form-select @error('supervisor_id') is-invalid @enderror" required>
                     <option value="">{{ __('اختر المشرف') }}</option>
                     @foreach ($supervisors as $supervisor)
                         <option value="{{ $supervisor->id }}"
@@ -114,7 +118,6 @@
                 @enderror
             </div>
         @endif
-
 
         {{-- نبذة عن المستخدم --}}
         <div class="col-12">

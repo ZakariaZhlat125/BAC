@@ -7,8 +7,13 @@ use Illuminate\Validation\Rule;
 
 class ProfileUpdateRequest extends FormRequest
 {
+    public function authorize(): bool
+    {
+        return true;
+    }
     public function rules(): array
     {
+
         $rules = [
             'name'              => ['required', 'string', 'max:255'],
             'email'             => [
@@ -26,10 +31,11 @@ class ProfileUpdateRequest extends FormRequest
         // إذا طالب
         if ($this->user()->hasRole('student')) {
             $rules = array_merge($rules, [
-                'year'          => ['nullable', 'integer', 'min:1'],
+                'year'          => ['required', 'integer', 'min:1'],
                 'bio'           => ['nullable', 'string', 'max:1000'],
-                'supervisor_id' => ['nullable', 'exists:supervisors,id'], // ✅ أضف هذا
+                // 'supervisor_id' => ['required', 'exists:supervisors,id'], // ✅ أضف هذا
             ]);
+
         }
 
         // إذا مشرف

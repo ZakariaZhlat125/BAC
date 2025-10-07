@@ -35,6 +35,7 @@
                         <th>#</th>
                         <th>اسم المقرر</th>
                         <th>الفصل الدراسي</th>
+                        <th>مدى الصعوبة (1 - 10)</th>
                         <th>السنة</th>
                         <th>التخصص</th>
                         <th>الوصف</th>
@@ -49,6 +50,7 @@
                             <td>{{ $course->id }}</td>
                             <td>{{ $course->title }}</td>
                             <td>{{ $course->semester }}</td>
+                            <td>{{ $course->difficulty }}</td>
                             <td>{{ $course->year->name ?? '-' }}</td>
                             <td>{{ $course->specializ->title ?? '-' }}</td>
                             <td>{{ Str::limit($course->description, 50) }}</td>
