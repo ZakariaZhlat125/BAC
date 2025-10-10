@@ -1,6 +1,36 @@
 <x-app-layout>
     @include('components.top-section-front')
+    <style>
+        .leader-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 1rem;
+        }
 
+        .leader-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .avatar-wrapper {
+            position: relative;
+        }
+
+        .avatar-wrapper::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 18px;
+            height: 18px;
+            background: #ffc107;
+            border: 2px solid #fff;
+            border-radius: 50%;
+        }
+
+        .points {
+            font-size: 1.1rem;
+        }
+    </style>
     <div style="background-color: var(--kfu-green); width: 100%;">
         <div class="py-6 row">
             <div class="col-3">
@@ -52,7 +82,7 @@
 
 
     <div class="container py-5">
-        <div class="row justify-content-center align-items-end">
+        <div class="row justify-content-center align-items-end g-4">
 
             @if ($topStudent && $topStudent->count() > 0)
                 @php
@@ -62,6 +92,7 @@
                         1 => 'assets/img/secound.png',
                         2 => 'assets/img/thered.png',
                     ];
+
                     // ترتيب العرض (الثاني، الأول، الثالث)
                     $order = [1, 0, 2];
                 @endphp
@@ -69,30 +100,53 @@
                 @foreach ($order as $index)
                     @if (isset($topStudent[$index]))
                         @php $student = $topStudent[$index]; @endphp
-                        <div class="col-12 col-md-3 mt-{{ $index == 0 ? '2' : ($index == 1 ? '5' : '4') }}">
-                            <div class="leader-card text-center p-3 shadow rounded bg-white">
-                                <div class="leader-icon mb-3">
-                                    <img class="img-fluid" src="{{ asset($icons[$index]) }}" alt="rank">
+
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex justify-content-center">
+                            <div class="card leader-card shadow-sm border-0 text-center">
+                                <div class="card-body">
+                                    <div class="leader-icon mb-3">
+                                        <img src="{{ asset($icons[$index]) }}" alt="rank" class="img-fluid"
+                                            style="max-height: 80px;">
+                                    </div>
+
+                                    {{-- Avatar --}}
+                                    @if ($student->user->gender === 'male')
+                                        <div class="avatar-wrapper mb-3">
+                                            <img src="{{ asset('assets/img/ic_avatar_2.png') }}"
+                                                class="avatar rounded-circle shadow-sm"
+                                                alt="{{ $student->user->name ?? 'Student' }}"
+                                                style="width: 90px; height: 90px; object-fit: cover;">
+                                        </div>
+                                    @else
+                                        <div class="avatar-wrapper mb-3">
+                                            <img src="{{ asset('assets/img/ic_avatar.png') }}"
+                                                class="avatar rounded-circle shadow-sm"
+                                                alt="{{ $student->user->name ?? 'Student' }}"
+                                                style="width: 90px; height: 90px; object-fit: cover;">
+                                        </div>
+                                    @endif
+
+
+                                    {{-- Name --}}
+                                    <h5 class="fw-bold text-dark mb-1">
+                                        {{ $student->user->name ?? 'مجهول' }}
+                                    </h5>
+
+                                    {{-- Points --}}
+                                    <p class="text-warning small mb-1">بمجموع نقاط تساوي</p>
+                                    <p class="points fw-semibold text-primary mb-0">
+                                        {{ (int) $student->points }} points
+                                    </p>
                                 </div>
-
-                                <img src="{{ asset('static/img/ic_avatar.png') }}" class="avatar rounded-circle mb-2"
-                                    alt="{{ $student->user->name ?? 'Student' }}">
-
-                                <h5 class="mt-2 fw-bold">
-                                    {{ $student->user->name ?? 'مجهول' }}
-                                </h5>
-
-                                <p class="text-warning small mb-1">بمجموع نقاط تساوي</p>
-                                <p class="points fw-bold text-primary">
-                                    {{ (int) $student->points }} points
-                                </p>
                             </div>
                         </div>
                     @endif
                 @endforeach
             @else
                 <div class="col-12 text-center">
-                    <p class="text-danger">⚠️ لا يوجد بيانات لعرضها حالياً</p>
+                    <div class="alert alert-warning mt-4" role="alert">
+                        ⚠️ لا يوجد بيانات لعرضها حالياً
+                    </div>
                 </div>
             @endif
 
@@ -100,11 +154,12 @@
     </div>
 
 
+
     <x-events :events="$events" />
     <br>
     <br>
 
-    <x-coursecs.specialization-cources  :specialization="$specialization" :years="$years"/>
+    <x-coursecs.specialization-cources :specialization="$specialization" :years="$years" />
 
     <br>
 

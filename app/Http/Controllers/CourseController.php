@@ -8,6 +8,7 @@ use App\Models\Specialization;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class CourseController extends Controller
 {
@@ -47,28 +48,52 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        // التحقق من المدخلات
-        $validated = $request->validate([
-            'title' => 'required|string|max:100',
-            'description' => 'nullable|string',
-            'semester' => 'nullable|string|max:50',
-            'year_id' => 'nullable|exists:years,id',
-            'difficulty' => 'nullable|integer|min:1|max:10',
-            // 'specialization_id' => 'nullable|exists:specializations,id',
-            'student_id' => 'nullable|exists:students,id',
-        ]);
-        // جلب supervisor_id من المستخدم الحالي
-        $supervisorId = auth()->user()->supervisor->id ?? null;
-        $specialization_id = Auth::user()->supervisor->specialization_id;
+        try {
 
-        // حفظ البيانات
-        Course::create(array_merge($validated, [
-            'supervisor_id' => $supervisorId,
-            'specialization_id' => $specialization_id
-        ]));
+            // 🔹 التحقق من صحة المدخلات
+            $validated = $request->validate([
+                'title' => 'required|string|max:100',
+                'description' => 'nullable|string',
+                'semester' => 'nullable|string|max:50',
+                'year_id' => 'nullable|exists:years,id',
+                'difficulty' => 'nullable|integer|min:1|max:10',
+                'image' => 'required|file|mimes:jpg,jpeg,png|max:2048',
+                'student_id' => 'nullable|exists:students,id',
+            ]);
+            // 🔹 جلب بيانات المشرف الحالي
+            $supervisor = auth()->user()->supervisor ?? null;
+            if (!$supervisor) {
+                return back()->with('error', 'لم يتم العثور على بيانات المشرف.')->withInput();
+            }
 
-        return redirect()->route('supervisor.courses.index')->with('success', 'تم إضافة المقرر بنجاح ✅');
+            $supervisorId = $supervisor->id;
+            $specializationId = $supervisor->specialization_id;
+
+            // 🔹 رفع الصورة
+            if ($request->hasFile('image')) {
+                $validated['image'] = $request->file('image')->store('courses', 'public');
+            }
+
+            // 🔹 حفظ المقرر
+            Course::create(array_merge($validated, [
+                'supervisor_id' => $supervisorId,
+                'specialization_id' => $specializationId,
+            ]));
+
+            return redirect()->route('supervisor.courses.index')
+                ->with('success', '✅ تم إضافة المقرر بنجاح.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 🔹 إرجاع أخطاء التحقق بصيغة JSON
+            return response()->json([
+                'status' => 'validation_error',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Throwable $th) {
+            // 🔹 معالجة الأخطاء
+            return back()->with('error', 'حدث خطأ أثناء الحفظ: ' . $th->getMessage())->withInput();
+        }
     }
+
 
     /**
      * Display the specified resource.
@@ -104,11 +129,20 @@ class CourseController extends Controller
             'semester' => 'nullable|string|max:50',
             'year_id' => 'nullable|exists:years,id',
             'difficulty' => 'nullable|integer|min:1|max:10',
+            'image' => 'nullable|file|mimes:jpg,jpeg,png',
             // 'specialization_id' => 'nullable|exists:specializations,id',
             'student_id' => 'nullable|exists:students,id',
         ]);
-
         $course = Course::findOrFail($id);
+        // رفع الملف الجديد إذا موجود
+        if ($request->hasFile('image')) {
+            // حذف الملف القديم إذا موجود
+            if ($course->image && Storage::disk('public')->exists($course->image)) {
+                Storage::disk('public')->delete($course->image);
+            }
+            $validated['image'] = $request->file('image')->store('cources', 'public');
+        }
+
         $course->update($validated);
 
         return redirect()->route('supervisor.courses.index')->with('success', 'تم تحديث المقرر بنجاح ✨');

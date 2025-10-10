@@ -16,6 +16,7 @@ class Course extends Model
         'description',
         'semester',
         'year_id',
+        'image',
         'difficulty',
         'specialization_id',
         'supervisor_id',

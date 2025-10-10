@@ -9,7 +9,8 @@
 
     {{-- مودال إنشاء مقرر جديد --}}
     <x-modal id="courseModal" title="إضافة مقرر جديد" maxWidth="lg">
-        <form method="POST" action="{{ route('supervisor.courses.store') }}" class="row g-3">
+        <form method="POST" action="{{ route('supervisor.courses.store') }}" class="row g-3"
+            enctype="multipart/form-data">
             @csrf
             @include('components.course-form')
             <div class="col-12 text-end mt-3">
@@ -64,7 +65,7 @@
                                 {{-- مودال التعديل --}}
                                 <x-modal id="editCourseModal{{ $course->id }}" title="تعديل المقرر" maxWidth="lg">
                                     <form method="POST" action="{{ route('supervisor.courses.update', $course->id) }}"
-                                        class="row g-3">
+                                        class="row g-3" enctype="multipart/form-data">
                                         @csrf
                                         @method('PUT')
                                         @include('components.course-form', ['course' => $course])

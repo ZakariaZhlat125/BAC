@@ -24,6 +24,9 @@ class ContentController extends Controller
         $contents = Content::with('chapter')
             ->where('status', 'approved')
             ->get();
+
+
+        // return response()->json($contents);
         return view('Page.DashBorad.supervisor.content.Content', compact('contents'));
     }
 

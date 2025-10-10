@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('title', 100)->nullable();
             $table->string('specialization', 100)->nullable();
             $table->string('semester', 50)->nullable();
+            $table->string('image')->nullable();
             $table->unsignedTinyInteger('difficulty')->default(1)->comment('1 = سهل ، 10 = صعب');
 
             // Foreign key to students table

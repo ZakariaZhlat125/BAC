@@ -2,7 +2,7 @@
     <div class="container py-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="fw-bold">تفاصيل الفصل: {{ $chapter->title }}</h2>
-            <a href="{{ route('supervisor.courses.index') }}" class="btn btn-secondary">
+            <a href="{{ route('user.show-cources' , $chapter->course->id) }}" class="btn btn-secondary">
                 <i class="fa-solid fa-arrow-left me-1"></i> العودة إلى المقرر
             </a>
         </div>
