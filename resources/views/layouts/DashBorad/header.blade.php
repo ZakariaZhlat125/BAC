@@ -40,9 +40,6 @@
 <x-notifications-modal />
 
 <x-points-conversion-modal :points="370" supervisorName="د. أحمد الشريف" />
-
-
-<!-- طلب ترقية الحساب -->
 <x-modal id="upgradeModal" title="طلب ترقية الحساب" maxWidth="lg">
     <form id="upgradeForm" action="{{ route('user.upgrade-profile') }}" method="POST" enctype="multipart/form-data"
         style="display:inline;">
@@ -57,6 +54,15 @@
             <label class="form-check-label" for="agreeTerms" style="margin-right: 30px; color: black;">
                 أوافق على الشروط والأحكام
             </label>
+        </div>
+
+        <!-- ✅ اختيار المشرف -->
+        <div class="mb-3">
+            <label for="supervisorSelect" class="form-label">اختر المشرف الأكاديمي</label>
+            <select class="form-select" id="supervisorSelect" name="supervisor_id" required>
+                <option value="">-- اختر المشرف --</option>
+                <!-- سيتم تعبئة الخيارات ديناميكيًا -->
+            </select>
         </div>
 
         <div class="mb-3">
@@ -74,6 +80,7 @@
             <li>رفع محتوى أصلي و مفيد</li>
             <li>الاستمرار في التفاعل (حد أدنى من المشاركات أو التفاعل)</li>
         </ul>
+
         <x-slot:footer>
             <button class="btn btn-kfu" type="submit" form="upgradeForm">إرسال الطلب للمراجعة</button>
         </x-slot:footer>
@@ -106,7 +113,21 @@
             })
             .then(response => response.json())
             .then(data => {
-                console.log(data);
+                const supervisorSelect = document.getElementById('supervisorSelect');
+                if (data.supervisors && data.supervisors.length > 0) {
+                    data.supervisors.forEach(sv => {
+                        const option = document.createElement('option');
+                        option.value = sv.id;
+                        option.textContent = `${sv.name} (${sv.email})`;
+                        supervisorSelect.appendChild(option);
+                    });
+                } else {
+                    const option = document.createElement('option');
+                    option.textContent = 'لا يوجد مشرفين متاحين حالياً';
+                    option.disabled = true;
+                    supervisorSelect.appendChild(option);
+                }
+
 
                 // تحديث الاسم والايميل
                 document.getElementById('user-name').textContent = data.name ?? 'مستخدم';

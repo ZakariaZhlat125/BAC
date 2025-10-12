@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Supervisor;
 use App\Models\UpgradeRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +17,7 @@ class UpgradeRequestController extends Controller
         $validated = $request->validate([
             'reason' => 'nullable|string|max:1000',
             'attach_file' => 'nullable|file|mimes:jpg,jpeg,png,mp4,mp3,m4a,pptx,pdf|max:10240',
+            'supervisor_id' => 'required|exists:supervisors,id',
         ]);
 
         $filePath = null;
@@ -25,8 +27,6 @@ class UpgradeRequestController extends Controller
 
         // الحصول على الطالب الحالي
         $student = Auth::user()->student;
-        $supervisor = $student->supervisor()->first();
-
 
         // تحديث أو إنشاء upgrade request لهذا الطالب
         $upgradeRequest = $student->upgradeRequest()->updateOrCreate(
@@ -35,12 +35,13 @@ class UpgradeRequestController extends Controller
                 'status' => 'pending',
                 'reason' => $validated['reason'] ?? null,
                 'attach_file' => $filePath,
-                'supervisor_id' => $supervisor->id,
+                'supervisor_id' => $validated['supervisor_id'],
             ]
         );
-        $supervisorUser = $supervisor->user;
-        Notification::send($supervisorUser, new NewUpgradeRequestNotification($student));
-
+        $supervisor = Supervisor::with('user')->find($validated['supervisor_id']);
+        if ($supervisor && $supervisor->user) {
+            Notification::send($supervisor->user, new NewUpgradeRequestNotification($student));
+        }
         return back()->with('success', 'تم إرسال طلب الترقية بنجاح، وسيتم مراجعته قريباً.');
     }
 

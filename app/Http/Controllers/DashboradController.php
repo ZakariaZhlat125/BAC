@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Content;
 use App\Models\Event;
+use App\Models\Student;
+use App\Models\Supervisor;
 use App\Models\UpgradeRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -113,6 +115,31 @@ class DashboradController extends Controller
     public function getMyData()
     {
         $user = Auth::user();
-        return  response()->json($user);
+        $student = Student::where('user_id', $user->id)->first();
+
+        // Find supervisor(s) that match the student's specialization
+        $supervisors = [];
+        if ($student && $student->specialization_id) {
+            $supervisors = Supervisor::with('user')
+                ->where('specialization_id', $student->specialization_id)
+                ->get()
+                ->map(function ($supervisor) {
+                    return [
+                        'id' => $supervisor->id,
+                        'name' => $supervisor->user->name ?? null,
+                        'email' => $supervisor->user->email ?? null,
+                    ];
+                });
+        }
+
+        // Return user data + supervisor info
+        return response()->json([
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'gender' => $user->gender ?? null,
+            'specialization_id' => $student->specialization_id ?? null,
+            'supervisors' => $supervisors,
+        ]);
     }
 }
