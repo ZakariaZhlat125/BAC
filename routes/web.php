@@ -76,6 +76,9 @@ Route::middleware(['auth'])->group(function () {
 
             // الفعاليات
             Route::resource('events', EventController::class);
+            Route::post('/events/{event}/update-status', [EventController::class, 'updateStatus'])
+                ->name('events.updateStatus');
+
             // courses
             Route::resource('courses', CourseController::class);
             //chapter

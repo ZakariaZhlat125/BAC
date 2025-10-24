@@ -38,6 +38,30 @@ class EventController extends Controller
         return  view('Page.DashBorad.supervisor.Events.show', compact('event'));
     }
 
+
+    public function updateStatus(Request $request, Event $event)
+    {
+        $request->validate([
+            'points' => 'nullable|integer|min:1|max:100',
+        ]);
+
+        // قيمة النقاط الافتراضية إذا لم يرسلها المستخدم
+        $points = $request->input('points', 5);
+
+        // تحقق أن الحدث يحتوي على مشاركات
+        if ($event->participations && $event->participations->count() > 0) {
+
+            foreach ($event->participations as $participation) {
+                // تأكد أن المشاركة مرتبطة بطالب
+                if ($participation->student) {
+                    $participation->student->increment('points', $points);
+                }
+            }
+        }
+
+        return redirect()->back()->with('success', 'تم منح النقاط لجميع الطلاب المشاركين بنجاح.');
+    }
+
     /**
      * حفظ حدث جديد
      */
@@ -46,6 +70,7 @@ class EventController extends Controller
         $validated = $request->validate([
             'event_name'   => 'nullable|string|max:100',
             'event_date'   => 'nullable|date',
+            'event_time'   => 'nullable|date_format:H:i',
             'location'     => 'nullable|string|max:100',
             'attendees'    => 'nullable|string',
             'description'  => 'nullable|string',
@@ -82,6 +107,7 @@ class EventController extends Controller
         $validated = $request->validate([
             'event_name'   => 'nullable|string|max:100',
             'event_date'   => 'nullable|date',
+            'event_time'   => 'nullable|date_format:H:i',
             'location'     => 'nullable|string|max:100',
             'attendees'    => 'nullable|string',
             'description'  => 'nullable|string',

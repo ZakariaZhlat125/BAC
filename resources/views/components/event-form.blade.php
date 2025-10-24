@@ -10,6 +10,11 @@
     <input type="date" name="event_date" class="form-control"
         value="{{ old('event_date', $event->event_date ?? '') }}">
 </div>
+<div class="col-md-6">
+    <label class="form-label">وقت الحدث</label>
+    <input type="time" name="event_time" class="form-control"
+        value="{{ old('event_time', $event->event_time ?? '') }}">
+</div>
 
 <div class="col-md-6">
     <label class="form-label">المكان</label>

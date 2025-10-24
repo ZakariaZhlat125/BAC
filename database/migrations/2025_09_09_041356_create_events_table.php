@@ -16,6 +16,7 @@ return new class extends Migration
 
             $table->string('event_name', 100)->nullable();
             $table->date('event_date')->nullable();
+            $table->time('event_time')->nullable();
             $table->string('location', 100)->nullable();
             $table->text('attendees')->nullable();
             $table->text('description')->nullable();

@@ -3,7 +3,9 @@
         <div class="card-header bg-info text-white fw-bold">
             تفاصيل الحدث
         </div>
-        <div class="card-body">
+        <div class="d-flex ">
+
+            <div class="card-body">
             <p><strong>اسم الحدث:</strong> {{ $event->event_name }}</p>
             <p><strong>التاريخ:</strong> {{ $event->event_date }}</p>
             <p><strong>المكان:</strong> {{ $event->location }}</p>
@@ -20,7 +22,29 @@
                     لا يوجد
                 @endif
             </p>
+
         </div>
+        {{-- نموذج منح النقاط --}}
+        <div class="card-body border-top">
+            <h5 class="fw-bold mb-3">منح نقاط للمشاركين</h5>
+            <form action="{{ route('supervisor.events.updateStatus', $event->id) }}" method="POST">
+                @csrf
+                <div class="row align-items-center">
+                    <div class="col-md-4">
+                        <label class="form-label">عدد النقاط</label>
+                        <input type="number" name="points" class="form-control" min="1" max="100"
+                            value="5">
+                    </div>
+                    <div class="col-md-4 mt-3 mt-md-0">
+                        <button type="submit" class="btn btn-success mt-4">
+                            <i class="fa-solid fa-star"></i> منح النقاط للطلاب
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        </div>
+
 
         {{-- قسم المشاركات --}}
         @if ($event->participations && $event->participations->count() > 0)

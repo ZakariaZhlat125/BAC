@@ -44,7 +44,7 @@
                         <tr>
                             <td>{{ $event->id }}</td>
                             <td>{{ $event->event_name }}</td>
-                            <td>{{ $event->event_date }}</td>
+                            <td>{{ $event->event_date }}- {{ $event->event_time }}</td>
                             <td>{{ $event->location }}</td>
                             <td>{{ $event->attendees }}</td>
                             <td>{{ Str::limit($event->description, 50) }}</td>

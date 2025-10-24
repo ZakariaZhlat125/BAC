@@ -156,4 +156,7 @@ class ContentController extends Controller
 
         return redirect()->back()->with('success', 'تم تحديث حالة المحتوى بنجاح.');
     }
+
+
+
 }

@@ -51,6 +51,10 @@
             الأول</option>
         <option value="الثاني" {{ old('semester', $course->semester ?? '') == 'الثاني' ? 'selected' : '' }}>الفصل
             الثاني</option>
+        الأول</option>
+        <option value="اضافية" {{ old('semester', $course->semester ?? '') == 'اضافية' ? 'selected' : '' }}> مواد
+            اضافية
+        </option>
     </select>
 </div>
 
