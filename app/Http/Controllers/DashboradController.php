@@ -66,7 +66,11 @@ class DashboradController extends Controller
             // 🔹 الفعاليات خلال الأسبوع الحالي (لكل يوم)
             $startOfWeek = Carbon::now()->startOfWeek();
             $endOfWeek   = Carbon::now()->endOfWeek();
-
+            $topStudents = $supervisor->students()
+                ->with('user')
+                ->orderByDesc('points') // ترتيب تنازلي بالنقاط
+                ->take(3)              // أخذ أول 3 فقط
+                ->get();
             $weeklyEvents = Event::selectRaw('DAYNAME(event_date) as day, COUNT(*) as count')
                 ->where('supervisor_id', $supervisor->id)
                 ->whereBetween('event_date', [$startOfWeek, $endOfWeek])
@@ -100,6 +104,7 @@ class DashboradController extends Controller
                 'specializationStats' => $specializationStats,
                 'days'                => json_encode(['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت']),
                 'eventsPerDay'        => json_encode($eventsPerDay),
+                'topStudent'        => $topStudents
             ]);
         }
 
