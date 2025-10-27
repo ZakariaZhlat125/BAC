@@ -128,12 +128,19 @@
                 </div>
             </div>
 
-            <div class="col-md-6">
+            {{-- <div class="col-md-6">
                 <div class="card-section">
                     <h5>عدد المحتويات حسب التخصص</h5>
                     <canvas id="specializationChart"></canvas>
                 </div>
+            </div> --}}
+            <div class="col-md-6">
+                <div class="card-section mt-4">
+                    <h5>نمو الإحصائيات الشهرية</h5>
+                    <canvas id="growthChart"></canvas>
+                </div>
             </div>
+
         </div>
 
         <!-- جدول التخصصات -->
@@ -160,6 +167,7 @@
                 </tbody>
             </table>
         </div>
+
     </div>
     @if ($topStudent && $topStudent->count() > 0)
         @php
@@ -228,6 +236,27 @@
     @endif
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const months = {!! $months !!};
+        const growthData = {!! $growthData !!};
+
+        new Chart(document.getElementById("growthChart"), {
+            type: "line",
+            data: {
+                labels: months,
+                datasets: [{
+                    label: "نمو عدد المحتويات",
+                    data: growthData,
+                    borderColor: "#0a4b5f",
+                    borderWidth: 3,
+                    fill: false,
+                    tension: 0.3
+                }]
+            },
+        });
+    </script>
+
+
     <script>
         // 🔹 بيانات الفعاليات في الأسبوع
         const days = {!! $days !!};

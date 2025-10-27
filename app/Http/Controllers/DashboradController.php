@@ -93,10 +93,17 @@ class DashboradController extends Controller
                 ->selectRaw('specializations.title as specialization_name, COUNT(contents.id) as total')
                 ->groupBy('specializations.title')
                 ->get();
+            $monthlyStats = Content::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+                ->where('supervisor_id', $supervisor->id)
+                ->groupBy('month')
+                ->pluck('total', 'month')
+                ->toArray();
 
             return view('Page.DashBorad.Supervisor.DashBrad', [
                 'user'                => $user,
                 'contentsCount'       => $contentsCount,
+                'growthData' => json_encode(array_values($monthlyStats)),
+                'months' => json_encode(array_keys($monthlyStats)),
                 'pendingContents'     => $pendingContents,
                 'upgradeRequests'     => $upgradeRequests,
                 'studentsCount'       => $studentsUnderSupervision,
