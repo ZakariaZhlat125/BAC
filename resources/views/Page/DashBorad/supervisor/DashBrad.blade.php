@@ -143,6 +143,28 @@
 
         </div>
 
+        <div class="row mt-4 ">
+            <!-- Upgrade Ratio Chart -->
+            <div class="col-md-6 ">
+                <div class="card-section">
+                    <h5>نسبة الطلاب المرقّين</h5>
+                    <canvas id="upgradeChart"></canvas>
+                    <p class="text-center mt-2 fw-bold text-secondary">
+                        {{ $upgradePercentage }}% من الطلاب تمت ترقيتهم
+                    </p>
+                </div>
+            </div>
+
+            <!-- Content Status Chart -->
+            <div class="col-md-6">
+                <div class="card-section">
+                    <h5>نسبة المحتويات المقبولة والمرفوضة</h5>
+                    <canvas id="contentChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+
         <!-- جدول التخصصات -->
         <div class="card-section">
             <h5>إحصائية المحتويات في كل تخصص</h5>
@@ -236,6 +258,51 @@
     @endif
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // 🔹 Upgrade Chart
+        new Chart(document.getElementById('upgradeChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['تمت الترقية', 'لم تتم الترقية'],
+                datasets: [{
+                    data: [{{ $upgradedStudents }}, {{ $notUpgraded }}],
+                    backgroundColor: ['#17a2b8', '#dc3545']
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // 🔹 Content Chart
+        const contentStats = {!! $contentStats !!};
+        new Chart(document.getElementById('contentChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['مقبولة', 'مرفوضة', 'قيد المراجعة'],
+                datasets: [{
+                    data: [
+                        contentStats.accepted,
+                        contentStats.rejected,
+                        contentStats.pending
+                    ],
+                    backgroundColor: ['#28a745', '#dc3545', '#ffc107']
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
+
     <script>
         const months = {!! $months !!};
         const growthData = {!! $growthData !!};

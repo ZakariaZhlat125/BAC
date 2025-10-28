@@ -98,12 +98,30 @@ class DashboradController extends Controller
                 ->groupBy('month')
                 ->pluck('total', 'month')
                 ->toArray();
+            // 🔹 Upgrade ratio
+            $totalStudents = $supervisor->students()->count();
+            $upgradedStudents = $supervisor->students()->where('is_upgraded', true)->count();
+            $notUpgraded = $totalStudents - $upgradedStudents;
+            $upgradePercentage = $totalStudents > 0 ? round(($upgradedStudents / $totalStudents) * 100, 2) : 0;
+
+            // 🔹 Content acceptance stats
+            $acceptedContents = $supervisor->contents()->where('status', 'accepted')->count();
+            $rejectedContents = $supervisor->contents()->where('status', 'rejected')->count();
+            $pendingContents  = $supervisor->contents()->where('status', 'pending')->count();
+            $totalContents = $acceptedContents + $rejectedContents + $pendingContents;
+
+            // 🔹 Percentage for chart
+            $contentStats = [
+                'accepted' => $acceptedContents,
+                'rejected' => $rejectedContents,
+                'pending'  => $pendingContents,
+            ];
 
             return view('Page.DashBorad.Supervisor.DashBrad', [
                 'user'                => $user,
                 'contentsCount'       => $contentsCount,
-                'growthData' => json_encode(array_values($monthlyStats)),
-                'months' => json_encode(array_keys($monthlyStats)),
+                'growthData'          => json_encode(array_values($monthlyStats)),
+                'months'              => json_encode(array_keys($monthlyStats)),
                 'pendingContents'     => $pendingContents,
                 'upgradeRequests'     => $upgradeRequests,
                 'studentsCount'       => $studentsUnderSupervision,
@@ -111,7 +129,11 @@ class DashboradController extends Controller
                 'specializationStats' => $specializationStats,
                 'days'                => json_encode(['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت']),
                 'eventsPerDay'        => json_encode($eventsPerDay),
-                'topStudent'        => $topStudents
+                'topStudent'          => $topStudents,
+                'upgradePercentage'   => $upgradePercentage,
+                'upgradedStudents'    => $upgradedStudents,
+                'notUpgraded'         => $notUpgraded,
+                'contentStats'        => json_encode($contentStats),
             ]);
         }
 
