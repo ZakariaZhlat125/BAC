@@ -68,6 +68,7 @@ class DashboradController extends Controller
             $endOfWeek   = Carbon::now()->endOfWeek();
             $topStudents = $supervisor->students()
                 ->with('user')
+                ->where('points', '>', 0)
                 ->orderByDesc('points') // ترتيب تنازلي بالنقاط
                 ->take(3)              // أخذ أول 3 فقط
                 ->get();

@@ -37,6 +37,7 @@ class SpecializationController extends Controller
         $countStudents = Student::where('is_upgraded', true)->count();
         $countEvents = Event::whereDate('event_date', '>=', Carbon::today())->count();
         $topStudent = $specializationModel->students()->with('user')
+            ->where('points', '>', 0)
             ->orderBy('points', 'desc')
             ->take(3)
             ->get();
