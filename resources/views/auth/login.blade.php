@@ -79,11 +79,13 @@
                     <label for="email" class="form-label text-white">البريد الجامعي</label>
                     <input type="text" class="form-control" id="email" name="email"
                         placeholder="example@domain.com" required>
+                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
                 </div>
                 <div class="mb-3 text-start">
                     <label for="password" class="form-label text-white">كلمة المرور</label>
                     <input type="password" class="form-control" id="password" name="password" placeholder="••••••••"
                         required>
+                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
                 <div class="d-flex mb-3 form-check text-start">
                     <label class="form-check-label text-white" for="remember">تذكرني</label>

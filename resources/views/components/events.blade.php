@@ -24,7 +24,7 @@
                                 <div class="d-flex align-items-center justify-content-center mb-2">
                                     <img src="{{ asset('assets/img/ic_time.png') }}" width="22" height="22"
                                         class="ms-2">
-                                    <span class="text-muted">
+                                    <span dir="ltr" class="text-muted">
                                         {{ \Carbon\Carbon::parse($event->event_date)->translatedFormat('d F Y') }} -
                                         {{ \Carbon\Carbon::parse($event->event_time)->format('H:i') }}
 

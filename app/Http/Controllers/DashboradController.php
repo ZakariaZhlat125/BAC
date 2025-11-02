@@ -117,7 +117,7 @@ class DashboradController extends Controller
                 'rejected' => $rejectedContents,
                 'pending'  => $pendingContents,
             ];
-
+            // return response()->json($topStudents);
             return view('Page.DashBorad.Supervisor.DashBrad', [
                 'user'                => $user,
                 'contentsCount'       => $contentsCount,

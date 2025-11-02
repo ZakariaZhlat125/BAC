@@ -191,7 +191,7 @@
         </div>
 
     </div>
-    <div class="">
+    <div class="container mt-4">
         @if ($topStudent && $topStudent->count() > 0)
             @php
                 // icons for ranking
@@ -205,54 +205,53 @@
                 $order = [1, 0, 2];
             @endphp
 
-            @foreach ($order as $index)
-                @if (isset($topStudent[$index]))
-                    @php $student = $topStudent[$index]; @endphp
-                    <div class="col-12 text-center">
-                        <div class="alert alert-heading mt-4" role="alert">
-                            افضل الطلاب </div>
+            {{-- Title shown once --}}
+            <div class="row">
+                <div class="col-12 text-center">
+                    <div class="alert alert-heading mt-4 fw-bold fs-4" role="alert">
+                        أفضل الطلاب
                     </div>
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex justify-content-center">
-                        <div class="card leader-card shadow-sm border-0 text-center">
-                            <div class="card-body">
-                                <div class="leader-icon mb-3">
-                                    <img src="{{ asset($icons[$index]) }}" alt="rank" class="img-fluid"
-                                        style="max-height: 80px;">
+                </div>
+            </div>
+
+            {{-- Three students side by side --}}
+            <div class="row justify-content-center">
+                @foreach ($order as $index)
+                    @if (isset($topStudent[$index]))
+                        @php $student = $topStudent[$index]; @endphp
+
+                        <div class="col-12 col-sm-6 col-md-4 d-flex justify-content-center mb-4">
+                            <div class="card leader-card shadow-sm border-0 text-center w-100">
+                                <div class="card-body">
+                                    <div class="leader-icon mb-3">
+                                        <img src="{{ asset($icons[$index]) }}" alt="rank" class="img-fluid"
+                                            style="max-height: 80px;">
+                                    </div>
+
+                                    {{-- Avatar --}}
+                                    <div class="avatar-wrapper mb-3">
+                                        <img src="{{ asset($student->user->gender === 'male' ? 'assets/img/ic_avatar_2.png' : 'assets/img/ic_avatar.png') }}"
+                                            class="avatar rounded-circle shadow-sm"
+                                            alt="{{ $student->user->name ?? 'Student' }}"
+                                            style="width: 90px; height: 90px; object-fit: cover;">
+                                    </div>
+
+                                    {{-- Name --}}
+                                    <h5 class="fw-bold text-dark mb-1">
+                                        {{ $student->user->name ?? 'مجهول' }}
+                                    </h5>
+
+                                    {{-- Points --}}
+                                    <p class="text-warning small mb-1">بمجموع نقاط تساوي</p>
+                                    <p class="points fw-semibold text-primary mb-0">
+                                        {{ (int) $student->points }} points
+                                    </p>
                                 </div>
-
-                                {{-- Avatar --}}
-                                @if ($student->user->gender === 'male')
-                                    <div class="avatar-wrapper mb-3">
-                                        <img src="{{ asset('assets/img/ic_avatar_2.png') }}"
-                                            class="avatar rounded-circle shadow-sm"
-                                            alt="{{ $student->user->name ?? 'Student' }}"
-                                            style="width: 90px; height: 90px; object-fit: cover;">
-                                    </div>
-                                @else
-                                    <div class="avatar-wrapper mb-3">
-                                        <img src="{{ asset('assets/img/ic_avatar.png') }}"
-                                            class="avatar rounded-circle shadow-sm"
-                                            alt="{{ $student->user->name ?? 'Student' }}"
-                                            style="width: 90px; height: 90px; object-fit: cover;">
-                                    </div>
-                                @endif
-
-
-                                {{-- Name --}}
-                                <h5 class="fw-bold text-dark mb-1">
-                                    {{ $student->user->name ?? 'مجهول' }}
-                                </h5>
-
-                                {{-- Points --}}
-                                <p class="text-warning small mb-1">بمجموع نقاط تساوي</p>
-                                <p class="points fw-semibold text-primary mb-0">
-                                    {{ (int) $student->points }} points
-                                </p>
                             </div>
                         </div>
-                    </div>
-                @endif
-            @endforeach
+                    @endif
+                @endforeach
+            </div>
         @else
             <div class="col-12 text-center">
                 <div class="alert alert-warning mt-4" role="alert">
@@ -261,6 +260,7 @@
             </div>
         @endif
     </div>
+
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>

@@ -94,7 +94,8 @@
                         <label for="name" class="form-label text-white">الاسم كامل</label>
                         <input type="text" class="form-control" name="name" id="name" required
                             placeholder="Ex: john Dun  ">
-                        <small class="text-warning" dir="rtl">الرجاء إدخال الاسم ثلاثي (الاسم الأول - الأوسط - الأخير)</small>
+                        <small class="text-warning" dir="rtl">الرجاء إدخال الاسم ثلاثي (الاسم الأول - الأوسط -
+                            الأخير)</small>
                         <x-input-error :messages="$errors->get('name')" class="mt-2" />
                     </div>
 
@@ -103,7 +104,7 @@
                         <input type="email" class="form-control" name="email" id="email" required
                             placeholder="123456789@student.kfu.edu.sa">
                         <small class="text-warning" dir="rtl">
-                            يجب أن يبدأ بـ 9 أرقام وينتهي بـ @student.kfu.edu.sa
+                            يجب أن يبدأ بـ 9 احرف وينتهي بـ @student.kfu.edu.sa
                         </small>
                         <x-input-error :messages="$errors->get('email')" class="mt-2" />
                     </div>
@@ -137,8 +138,8 @@
                     </div>
 
                     <div class="mb-3 text-end">
-                        <label for="major" class="form-label text-white">التخصص</label>
-                        <select class="form-control" name="major" id="major" required>
+                        <label for="specialization_id" class="form-label text-white">التخصص</label>
+                        <select class="form-control" name="specialization_id" id="specialization_id" required>
                             <option value="" disabled selected>اختر التخصص</option>
                             @foreach ($specializations as $specialization)
                                 <option value="{{ $specialization->id }}">{{ $specialization->title }}</option>

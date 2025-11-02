@@ -52,7 +52,7 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         $request->validate([
             'name' => [
@@ -65,7 +65,7 @@ class RegisteredUserController extends Controller
                 'required',
                 'string',
                 'email',
-                'regex:/^[0-9]{9}@student\.kfu\.edu\.sa$/i',
+                'regex:/^[^@]+@student\.kfu\.edu\.sa$/i',
                 'max:255',
                 'unique:' . User::class
             ],
@@ -78,7 +78,7 @@ class RegisteredUserController extends Controller
         ]);
 
         DB::beginTransaction();
-
+        // return response()->json($request);
         try {
             $user = User::create([
                 'name' => $request->name,
@@ -88,7 +88,7 @@ class RegisteredUserController extends Controller
             ]);
 
             $user->student()->create([
-                'major' => $request->major,
+                // 'major' => $request->major,
                 'year' => $request->year,
                 'bio' => $request->bio,
                 'specialization_id' => $request->specialization_id,
