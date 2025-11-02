@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Chapter;
 use App\Models\Content;
 use App\Notifications\NewContentNotification;
 use Illuminate\Http\Request;
@@ -12,7 +13,9 @@ class ContentController extends Controller
 {
     public function showPage()
     {
-        $contents = Content::with('chapter')
+        $user = Auth::user();
+        $supervisor = $user->supervisor;
+        $contents = $supervisor->contents()->with('chapter')
             ->where('status', 'pending')
             ->orWhere('status', 'rejected')
             ->get();
@@ -21,7 +24,9 @@ class ContentController extends Controller
 
     public function approvedContent()
     {
-        $contents = Content::with('chapter')
+        $user = Auth::user();
+        $supervisor = $user->supervisor;
+        $contents = $supervisor->contents()->with('chapter')
             ->where('status', 'approved')
             ->get();
 
@@ -60,6 +65,7 @@ class ContentController extends Controller
                 'video'       => 'nullable|file|mimes:mp4,mov,avi,wmv,mkv|max:51200', // 50MB
                 'chapter_id'  => 'required|exists:chapters,id',
                 'type'        => 'required|in:explain,summary',
+
             ]);
 
             $content = DB::transaction(function () use ($request) {
@@ -70,6 +76,8 @@ class ContentController extends Controller
                 $videoPath = $request->hasFile('video')
                     ? $request->file('video')->store('videos', 'public')
                     : null;
+                $chapter = Chapter::with('course.supervisor')->findOrFail($request->chapter_id);
+                $supervisorId = $chapter->course->supervisor_id ?? null;
 
                 $content = Content::create([
                     'title'        => $request->title,
@@ -79,6 +87,7 @@ class ContentController extends Controller
                     'chapter_id'   => $request->chapter_id,
                     'student_id'   => Auth::user()->student->id,
                     'type'         => $request->type,
+                    "supervisor_id" => $supervisorId,
                     'status'       => 'pending',
                 ]);
 
@@ -156,7 +165,4 @@ class ContentController extends Controller
 
         return redirect()->back()->with('success', 'تم تحديث حالة المحتوى بنجاح.');
     }
-
-
-
 }

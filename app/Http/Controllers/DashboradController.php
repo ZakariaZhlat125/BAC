@@ -106,7 +106,7 @@ class DashboradController extends Controller
             $upgradePercentage = $totalStudents > 0 ? round(($upgradedStudents / $totalStudents) * 100, 2) : 0;
 
             // 🔹 Content acceptance stats
-            $acceptedContents = $supervisor->contents()->where('status', 'accepted')->count();
+            $acceptedContents = $supervisor->contents()->where('status', 'approved')->count();
             $rejectedContents = $supervisor->contents()->where('status', 'rejected')->count();
             $pendingContents  = $supervisor->contents()->where('status', 'pending')->count();
             $totalContents = $acceptedContents + $rejectedContents + $pendingContents;
@@ -117,7 +117,7 @@ class DashboradController extends Controller
                 'rejected' => $rejectedContents,
                 'pending'  => $pendingContents,
             ];
-            // return response()->json($topStudents);
+
             return view('Page.DashBorad.Supervisor.DashBrad', [
                 'user'                => $user,
                 'contentsCount'       => $contentsCount,

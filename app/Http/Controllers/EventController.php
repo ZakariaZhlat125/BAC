@@ -17,7 +17,7 @@ class EventController extends Controller
     {
 
         $events = Event::where('supervisor_id', auth()->user()->supervisor->id)->get();
-
+        // return response()->json($events);
         return view('Page.DashBorad.supervisor.Events.index', compact('events'));
     }
     /**
