@@ -48,19 +48,29 @@ class EventController extends Controller
         // قيمة النقاط الافتراضية إذا لم يرسلها المستخدم
         $points = $request->input('points', 5);
 
+        // تحميل المشاركات مع الطلاب لتجنب تكرار الاستعلامات
+        $event->load('participations.student');
+
         // تحقق أن الحدث يحتوي على مشاركات
-        if ($event->participations && $event->participations->count() > 0) {
+        if ($event->participations->count() > 0) {
 
             foreach ($event->participations as $participation) {
+
                 // تأكد أن المشاركة مرتبطة بطالب
-                if ($participation->student) {
+                if ($participation->student && $participation->is_attended) {
                     $participation->student->increment('points', $points);
                 }
             }
         }
 
+        // تحديث حالة الحدث
+        $event->update([
+            'is_complated' => true,
+        ]);
+
         return redirect()->back()->with('success', 'تم منح النقاط لجميع الطلاب المشاركين بنجاح.');
     }
+
 
     /**
      * حفظ حدث جديد
@@ -103,7 +113,6 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-
         $validated = $request->validate([
             'event_name'   => 'nullable|string|max:100',
             'event_date'   => 'nullable|date',
@@ -113,7 +122,6 @@ class EventController extends Controller
             'description'  => 'nullable|string',
             'attach'       => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048', // 2MB max
         ]);
-
         // رفع الملف الجديد إذا موجود
         if ($request->hasFile('attach')) {
             // حذف الملف القديم إذا موجود
@@ -169,5 +177,17 @@ class EventController extends Controller
         ]);
 
         return back()->with('success', 'You have successfully participated in the event.');
+    }
+
+    public function updateAttendance(Request $request, StudentParticipation $participation)
+    {
+        // Convert checkbox to boolean
+        $is_attended = $request->has('is_attended') ? true : false;
+        // return response()->json($participation);
+        $participation->update([
+            'is_attended' => $is_attended,
+        ]);
+
+        return back()->with('success', 'تم تحديث حالة الحضور بنجاح.');
     }
 }

@@ -13,6 +13,7 @@ class StudentParticipation extends Model
     protected $fillable = [
         'description',
         'attendance_status',
+        'is_attended',
         'feedback',
         'student_id',
         'event_id',

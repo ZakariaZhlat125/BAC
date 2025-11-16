@@ -78,6 +78,11 @@ Route::middleware(['auth'])->group(function () {
             Route::resource('events', EventController::class);
             Route::post('/events/{event}/update-status', [EventController::class, 'updateStatus'])
                 ->name('events.updateStatus');
+            Route::patch(
+                '/participations/{participation}/attendance',
+                [EventController::class, 'updateAttendance']
+            )
+                ->name('participations.updateAttendance');
 
             // courses
             Route::resource('courses', CourseController::class);

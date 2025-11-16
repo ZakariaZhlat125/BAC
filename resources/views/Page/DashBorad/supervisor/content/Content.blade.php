@@ -108,6 +108,7 @@
         {{-- 🔹 مودال عرض المحتوى --}}
         <x-modal id="viewContentModal{{ $content->id }}" title="تفاصيل المحتوى" maxWidth="lg">
             <div class="content-details">
+
                 {{-- العنوان والوصف --}}
                 <h4 class="fw-bold text-primary mb-2">{{ $content->title }}</h4>
                 <p class="text-muted mb-4">{{ $content->description ?? '— لا يوجد وصف —' }}</p>
@@ -119,7 +120,14 @@
                     </span>
                 </div>
 
-                {{-- الفصل المرتبط --}}
+                {{-- سبب الرفض إن وجد --}}
+                @if ($content->reason)
+                    <div class="alert alert-danger py-2">
+                        <strong>سبب الرفض:</strong> {{ $content->reason }}
+                    </div>
+                @endif
+
+                {{-- الفصل --}}
                 @if ($content->chapter)
                     <div class="chapter-info mb-4 d-flex align-items-center gap-3 border p-2 rounded bg-light">
                         <img src="{{ asset('storage/' . $content->chapter->file) }}"
@@ -132,18 +140,36 @@
                     </div>
                 @endif
 
-                {{-- عرض الفيديو إن وُجد --}}
+                {{-- معلومات الطالب --}}
+                @if ($content->student)
+                    <div class="border p-3 rounded mb-3 bg-white">
+                        <h6 class="fw-bold text-dark mb-2">👨‍🎓 معلومات الطالب</h6>
+                        <p class="mb-1"><strong>الاسم:</strong> {{ $content->student->user->name }}</p>
+                        <p class="mb-1"><strong>البريد:</strong> {{ $content->student->user->email }}</p>
+                        <p class="mb-1"><strong>السنة:</strong> {{ $content->student->year }}</p>
+                        <p class="mb-1"><strong>النقاط:</strong> {{ $content->student->points }}</p>
+                    </div>
+                @endif
+
+                {{-- معلومات المشرف --}}
+                {{-- @if ($content->supervisor)
+                    <div class="border p-3 rounded mb-3 bg-white">
+                        <h6 class="fw-bold text-dark mb-2">🧑‍🏫 بيانات المشرف</h6>
+                        <p class="mb-1"><strong>ID:</strong> {{ $content->supervisor->id }}</p>
+                    </div>
+                @endif --}}
+
+                {{-- عرض الفيديو --}}
                 @if ($content->video)
                     <div class="video-container mb-3">
-                        <video class="w-100 rounded shadow-sm" controls preload="metadata"
-                            poster="{{ asset('assets/img/video-placeholder.jpg') }}">
+                        <video class="w-100 rounded shadow-sm" controls>
                             <source src="{{ asset('storage/' . $content->video) }}" type="video/mp4">
                             متصفحك لا يدعم تشغيل الفيديو.
                         </video>
                     </div>
                 @endif
 
-                {{-- عرض الملف إن وُجد --}}
+                {{-- عرض الملف --}}
                 @if ($content->file)
                     <a href="{{ asset('storage/' . $content->file) }}" target="_blank" class="btn btn-outline-primary">
                         <i class="fa-solid fa-file-arrow-down me-1"></i> تحميل الملف
@@ -152,12 +178,13 @@
 
                 {{-- معلومات إضافية --}}
                 <div class="mt-4 small text-secondary">
-                    <p class="mb-1"><strong>نوع المحتوى:</strong> {{ $content->type ?? '-' }}</p>
+                    <p class="mb-1"><strong>نوع المحتوى:</strong> {{ $content->type }}</p>
                     <p class="mb-1"><strong>تاريخ الإنشاء:</strong> {{ $content->created_at->format('Y-m-d H:i') }}
                     </p>
                     <p><strong>آخر تحديث:</strong> {{ $content->updated_at->format('Y-m-d H:i') }}</p>
                 </div>
             </div>
+
         </x-modal>
 
 

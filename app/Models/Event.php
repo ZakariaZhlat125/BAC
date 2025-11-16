@@ -16,6 +16,7 @@ class Event extends Model
         'event_date',
         'event_time',
         'location',
+        'is_complated',
         'attendees',
         'description',
         'supervisor_id',

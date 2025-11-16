@@ -8,6 +8,7 @@ use App\Notifications\NewContentNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Response;
 
 class ContentController extends Controller
 {
@@ -15,7 +16,7 @@ class ContentController extends Controller
     {
         $user = Auth::user();
         $supervisor = $user->supervisor;
-        $contents = $supervisor->contents()->with('chapter')
+        $contents = $supervisor->contents()->with(['chapter', 'student.user'])
             ->where('status', 'pending')
             ->orWhere('status', 'rejected')
             ->get();
@@ -26,12 +27,11 @@ class ContentController extends Controller
     {
         $user = Auth::user();
         $supervisor = $user->supervisor;
-        $contents = $supervisor->contents()->with('chapter')
+        $contents = $supervisor->contents()->with(['chapter', 'student.user'])
             ->where('status', 'approved')
             ->get();
 
 
-        // return response()->json($contents);
         return view('Page.DashBorad.supervisor.content.Content', compact('contents'));
     }
 

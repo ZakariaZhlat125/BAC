@@ -36,9 +36,11 @@
                                 value="5">
                         </div>
                         <div class="col-md-4 mt-3 mt-md-0">
-                            <button type="submit" class="btn btn-success mt-4">
-                                <i class="fa-solid fa-star"></i> منح النقاط للطلاب
-                            </button>
+                            @if (!$event->is_complated)
+                                <button type="submit" class="btn btn-success mt-4">
+                                    <i class="fa-solid fa-star"></i> منح النقاط للطلاب
+                                </button>
+                            @endif
                         </div>
                     </div>
                 </form>
@@ -49,16 +51,16 @@
         {{-- قسم المشاركات --}}
         @if ($event->participations && $event->participations->count() > 0)
             <div class="card-body border-top">
-                <h5 class="fw-bold mb-3">المشاركات</h5>
+                <h5 class="fw-bold mb-3">المشاركين</h5>
                 <table class="table table-bordered">
                     <thead class="table-light">
                         <tr>
                             <th>#</th>
                             <th>اسم الطالب</th>
-                            <th>الصف</th>
+                            <th>السنة</th>
                             <th>النقاط</th>
                             <th>الحالة</th>
-                            <th>التغذية الراجعة</th>
+                            <th>الحضور</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -75,7 +77,32 @@
                                         <span class="badge bg-secondary">{{ $participation->attendance_status }}</span>
                                     @endif
                                 </td>
-                                <td>{{ $participation->feedback ?? '-' }}</td>
+                                <td>
+                                    @if (!$event->is_complated)
+                                        <form
+                                            action="{{ route('supervisor.participations.updateAttendance', $participation->id) }}"
+                                            method="POST" class="m-0 p-0">
+                                            @csrf
+                                            @method('PATCH')
+
+                                            <label class="form-check ">
+                                                <input type="checkbox" name="is_attended" value="1"
+                                                    class="form-check-input" onchange="this.form.submit()"
+                                                    {{ $participation->is_attended ? 'checked' : '' }}>
+                                                {{-- <span class="form-check-label">حضر</span> --}}
+                                            </label>
+                                        </form>
+                                    @else
+                                        <label class="form-check">
+                                            <input type="checkbox" class="form-check-input" disabled
+                                                {{ $participation->is_attended ? 'checked' : '' }}>
+                                            {{-- <span class="form-check-label">حضر</span> --}}
+                                        </label>
+                                    @endif
+                                </td>
+
+
+
                             </tr>
                         @endforeach
                     </tbody>
