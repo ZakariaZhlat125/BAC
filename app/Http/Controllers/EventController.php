@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EventRequest;
 use App\Models\Event;
 use App\Models\StudentParticipation;
 use Illuminate\Http\Request;
@@ -75,17 +76,9 @@ class EventController extends Controller
     /**
      * حفظ حدث جديد
      */
-    public function store(Request $request)
+    public function store(EventRequest $request)
     {
-        $validated = $request->validate([
-            'event_name'   => 'nullable|string|max:100',
-            'event_date'   => 'nullable|date',
-            'event_time'   => 'nullable|date_format:H:i',
-            'location'     => 'nullable|string|max:100',
-            'attendees'    => 'nullable|string',
-            'description'  => 'nullable|string',
-            'attach'       => 'nullable|file|mimes:jpg,jpeg,png|max:2048', // 2MB max
-        ]);
+        $validated = $request->validated();
         // رفع الملف إن وجد
         if ($request->hasFile('attach')) {
             $validated['attach'] = $request->file('attach')->store('events', 'public');
@@ -111,31 +104,31 @@ class EventController extends Controller
     /**
      * تحديث حدث
      */
-    public function update(Request $request, Event $event)
+    public function update(EventRequest $request, Event $event)
     {
-        $validated = $request->validate([
-            'event_name'   => 'nullable|string|max:100',
-            'event_date'   => 'nullable|date',
-            'event_time'   => 'nullable|date_format:H:i',
-            'location'     => 'nullable|string|max:100',
-            'attendees'    => 'nullable|string',
-            'description'  => 'nullable|string',
-            'attach'       => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048', // 2MB max
-        ]);
-        // رفع الملف الجديد إذا موجود
-        if ($request->hasFile('attach')) {
-            // حذف الملف القديم إذا موجود
-            if ($event->attach && Storage::disk('public')->exists($event->attach)) {
-                Storage::disk('public')->delete($event->attach);
+        $validated = $request->validated();
+
+        try {
+            if ($request->hasFile('attach')) {
+                if ($event->attach && Storage::disk('public')->exists($event->attach)) {
+                    Storage::disk('public')->delete($event->attach);
+                }
+                $validated['attach'] = $request->file('attach')->store('events', 'public');
             }
-            $validated['attach'] = $request->file('attach')->store('events', 'public');
+
+            $event->update($validated);
+
+            return redirect()->route('supervisor.events.index')
+                ->with('success', 'تم تحديث الحدث بنجاح ✨');
+        } catch (\Throwable $e) {
+            report($e);
+
+            return back()
+                ->withErrors(['error' => 'حدث خطأ أثناء تحديث الحدث 😢'])
+                ->withInput();
         }
-
-        $event->update($validated);
-
-        return redirect()->route('supervisor.events.index')
-            ->with('success', 'تم تحديث الحدث بنجاح ✨');
     }
+
 
     /**
      * حذف حدث

@@ -50,8 +50,7 @@ class UpgradeRequestController extends Controller
     {
         $user = Auth::user();
         $supervisorId = $user->supervisor->id;
-
-        $data = UpgradeRequest::with(['student', 'student.specializ', 'student.user'])->where('supervisor_id', $supervisorId)
+        $data = UpgradeRequest::with(['student.user', 'student.specializ', 'student.user'])->where('supervisor_id', $supervisorId)
             ->latest()
             ->get();
         // return response()->json($data);
@@ -63,11 +62,13 @@ class UpgradeRequestController extends Controller
         $user = Auth::user();
         $supervisorId = $user->supervisor->id;
 
-        $data = UpgradeRequest::with(['student', 'student.specializ', 'supervisor'])
+        $data = UpgradeRequest::with(['student.user', 'student.specializ', 'supervisor'])
             ->where('status', 'pending')
             ->where('supervisor_id', $supervisorId)
             ->latest()
             ->get();
+
+
         return view('Page.DashBorad.supervisor.upgrade_requests.pending', compact('data'));
     }
 
