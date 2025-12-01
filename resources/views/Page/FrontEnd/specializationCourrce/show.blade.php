@@ -22,65 +22,70 @@
             </a>
         </div>
 
-        <!-- تبويبات -->
+        <!-- Tabs -->
         <ul class="nav nav-tabs mb-4">
             <li class="nav-item me-2 mx-2 shadow-md">
-                <button id="video-btn" class="btn btn-warning fw-bold px-4 d-flex align-items-center">
+                <button data-tab="video" class="tab-button btn btn-warning fw-bold px-4 d-flex align-items-center">
                     <i class="fa-solid fa-play-circle me-2"></i> شرح الشابتر
                 </button>
             </li>
             <li class="nav-item mx-2 shadow-md">
-                <button id="summary-btn" class="btn btn-light fw-bold px-4 d-flex align-items-center">
+                <button data-tab="summary" class="tab-button btn btn-light fw-bold px-4 d-flex align-items-center">
                     <i class="fa-solid fa-book-open me-2"></i> ملخصات
                 </button>
             </li>
         </ul>
 
-        <!-- المكونات -->
-        <div id="video-component">
+        <!-- Components -->
+        <div id="video-component" data-state="active">
             <x-video-content :chapterId="$chapter->id" />
         </div>
 
-        <div id="summary-component" class="d-none">
+        <div id="summary-component" class="d-none" data-state="inactive">
             <x-summary-content :chapterId="$chapter->id" />
         </div>
 
     </div>
 
-    <!-- تدرجات لونية مخصصة -->
     <style>
         .bg-gradient-success {
             background: linear-gradient(45deg, #28a745, #43cea2);
         }
     </style>
 
-    <!-- JavaScript -->
     <script>
-        const videoBtn        = document.getElementById('video-btn');
-        const summaryBtn      = document.getElementById('summary-btn');
-        const videoComponent  = document.getElementById('video-component');
-        const summaryComponent= document.getElementById('summary-component');
+        const tabs = document.querySelectorAll(".tab-button");
+        const components = {
+            video: document.getElementById("video-component"),
+            summary: document.getElementById("summary-component"),
+        };
 
-        videoBtn.addEventListener('click', () => {
-            videoComponent.classList.remove('d-none');
-            summaryComponent.classList.add('d-none');
+        tabs.forEach(tab => {
+            tab.addEventListener("click", () => {
+                const selected = tab.dataset.tab;
 
-            videoBtn.classList.add('btn-warning');
-            videoBtn.classList.remove('btn-light');
+                // Update components state
+                Object.keys(components).forEach(key => {
+                    if (key === selected) {
+                        components[key].classList.remove("d-none");
+                        components[key].dataset.state = "active";
+                    } else {
+                        components[key].classList.add("d-none");
+                        components[key].dataset.state = "inactive";
+                    }
+                });
 
-            summaryBtn.classList.remove('btn-warning');
-            summaryBtn.classList.add('btn-light');
-        });
-
-        summaryBtn.addEventListener('click', () => {
-            summaryComponent.classList.remove('d-none');
-            videoComponent.classList.add('d-none');
-
-            summaryBtn.classList.add('btn-warning');
-            summaryBtn.classList.remove('btn-light');
-
-            videoBtn.classList.remove('btn-warning');
-            videoBtn.classList.add('btn-light');
+                // Update buttons style
+                tabs.forEach(btn => {
+                    if (btn.dataset.tab === selected) {
+                        btn.classList.remove("btn-light");
+                        btn.classList.add("btn-warning");
+                    } else {
+                        btn.classList.remove("btn-warning");
+                        btn.classList.add("btn-light");
+                    }
+                });
+            });
         });
     </script>
 </x-app-layout>

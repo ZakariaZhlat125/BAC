@@ -15,6 +15,7 @@ class CommentController extends Controller
             'content_id' => 'required|exists:contents,id',
         ]);
 
+
         $comment = Comment::create([
             'body'       => $request->body,
             'content_id' => $request->content_id,

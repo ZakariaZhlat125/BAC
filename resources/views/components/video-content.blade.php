@@ -215,6 +215,9 @@
 
         // إرسال التعليق
         submitComment.addEventListener('click', function() {
+                  console.log("commentBody.value video ", commentBody.value);
+            console.log("selectedContentId video", selectedContentId);
+
             if (!commentBody.value || !selectedContentId) return;
             fetch('/comments', {
                 method: 'POST',
